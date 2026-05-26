@@ -213,7 +213,13 @@
               width="150"
               align="center"
               header-align="center"
-            />
+            >
+              <template #default="{ row }">
+                <span :class="getTmScoreClass(row.tm_score)">
+                  {{ row.tm_score }}
+                </span>
+              </template>
+            </el-table-column>
 
             <el-table-column
               prop="sequence_similarity"
@@ -222,7 +228,13 @@
               width="200"
               align="center"
               header-align="center"
-            />
+            >
+              <template #default="{ row }">
+                <span :class="getSequenceSimilarityClass(row)">
+                  {{ row.sequence_similarity }}
+                </span>
+              </template>
+            </el-table-column>
 
             <el-table-column
               prop="query_protein_length"
@@ -436,6 +448,37 @@ const formatQueryProteinName = value => {
   }
 
   return name
+}
+
+const getTmScoreClass = value => {
+  const number = parseScoreValue(value)
+
+  if (!Number.isFinite(number)) {
+    return ''
+  }
+
+  return number < 50 ? 'similarity-warning' : 'similarity-positive'
+}
+
+const parseScoreValue = value => {
+  return parseFloat(String(value ?? '').replace('%', ''))
+}
+
+const getSequenceSimilarityClass = row => {
+  const tmScore = parseScoreValue(row?.tm_score)
+  const sequenceSimilarity = parseScoreValue(row?.sequence_similarity)
+
+  if (!Number.isFinite(tmScore) || !Number.isFinite(sequenceSimilarity)) {
+    return ''
+  }
+
+  if (tmScore < 50) {
+    return ''
+  }
+
+  if (sequenceSimilarity >= 50) return 'similarity-positive'
+  if (sequenceSimilarity >= 30) return 'similarity-warning'
+  return 'similarity-danger'
 }
 
 const handleSubmit = async () => {
@@ -722,6 +765,21 @@ onMounted(async () => {
 .table-wrapper {
   width: 100%;
   overflow-x: auto;
+}
+
+.similarity-positive {
+  color: #2f8f46;
+  font-weight: 600;
+}
+
+.similarity-warning {
+  color: #d48806;
+  font-weight: 600;
+}
+
+.similarity-danger {
+  color: #d93025;
+  font-weight: 600;
 }
 
 .pagination-wrap {

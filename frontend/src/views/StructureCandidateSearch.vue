@@ -318,13 +318,13 @@
 
           <el-table-column
             prop="cosine_similarity_percent"
-            label="Similarity (%)"
+            label="TM-score"
             min-width="150"
             align="center"
             sortable="custom"
           >
             <template #default="{ row }">
-              <span :class="getSimilarityClass(row.cosine_similarity)">
+              <span :class="getSimilarityClass(row)">
                 {{ formatNumber(row.cosine_similarity_percent, 4) }}%
               </span>
             </template>
@@ -354,13 +354,13 @@ import {
 import { ElMessage } from 'element-plus'
 import request from '@/utils/request'
 
-const DEFAULT_PROTEIN_ID = 'NP_001310781.1'
+const DEFAULT_PROTEIN_ID = 'Glyma_01G000100'
 
-const DEFAULT_QUERY_SPECIES = 'Ziziphus jujuba'
-const DEFAULT_QUERY_GENOME_NAME = 'ASM2079620v1'
+const DEFAULT_QUERY_SPECIES = 'Glycine max'
+const DEFAULT_QUERY_GENOME_NAME = 'Glycine_max_Wm82v6'
 
-const DEFAULT_TARGET_SPECIES = 'Zea mays'
-const DEFAULT_TARGET_GENOME_NAME = 'Zmays_493_RefGen_V4'
+const DEFAULT_TARGET_SPECIES = 'Oryza sativa'
+const DEFAULT_TARGET_GENOME_NAME = 'osa1_r7'
 
 const DEFAULT_SIMILARITY_MIN = 0
 const DEFAULT_SIMILARITY_MAX = 100
@@ -757,14 +757,17 @@ const isPositiveSimilarity = (item) => {
   return Number.isFinite(percent) && percent > 0.00001
 }
 
-const getSimilarityClass = (score) => {
-  const number = Number(score)
+const getSimilarityClass = (item) => {
+  const percent = Number(item?.cosine_similarity_percent)
+  const score = Number(item?.cosine_similarity)
+  const number = Number.isFinite(percent) ? percent : score * 100
 
   if (!Number.isFinite(number)) {
     return ''
   }
 
-  if (number > 1e-7) return 'similarity-positive'
+  if (number < 50) return 'similarity-warning'
+  if (number > 0.00001) return 'similarity-positive'
   return 'similarity-non-positive'
 }
 
@@ -1044,6 +1047,11 @@ onMounted(() => {
 
 .similarity-positive {
   color: #2f8f46;
+  font-weight: 600;
+}
+
+.similarity-warning {
+  color: #d48806;
   font-weight: 600;
 }
 
