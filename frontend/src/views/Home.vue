@@ -386,7 +386,7 @@ const examples = [
     image: '/image/examples/seq-align.jpg'
   },
   {
-    title: 'Structural Comparison Example',
+    title: 'Structural Alignment Example',
     image: '/image/examples/structure-alignment.png'
   },
 ]
