@@ -1,5 +1,6 @@
 <template>
   <div class="page help-page">
+    <div class="page-container">
     <!-- Help Hero -->
     <section class="section-card hero-card">
       <div class="section-label">Help</div>
@@ -178,6 +179,7 @@
         </div>
       </div>
     </section>
+    </div>
   </div>
 </template>
 
@@ -326,35 +328,43 @@ export default {
 
 <style scoped>
 .page {
+  width: 100%;
   min-height: 100vh;
-  padding: 32px 54px 56px;
+  padding: 24px;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
   background: #f4f8fb;
   color: #303746;
   font-family: "Arial", "Helvetica", sans-serif;
 }
 
+.page-container {
+  width: 100%;
+  max-width: 1600px;
+}
+
 .section-card {
   position: relative;
+  width: 100%;
   background: #ffffff;
-  border: 1px solid #e4ebf2;
-  border-radius: 6px;
-  box-shadow: 0 2px 10px rgba(39, 70, 115, 0.08);
+  border: 1px solid #dcdfe6;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  box-sizing: border-box;
 }
 
 .section-label {
   position: absolute;
-  top: 14px;
-  left: -8px;
-  min-width: 118px;
-  height: 36px;
-  padding: 0 18px;
-  line-height: 36px;
+  top: 16px;
+  left: -10px;
+  background: #b2e6f5;
   color: #ffffff;
-  font-size: 15px;
-  font-weight: 700;
-  background: #a7dceb;
-  border-radius: 3px 3px 3px 0;
-  text-align: center;
+  font-size: 18px;
+  line-height: 1;
+  padding: 12px 22px;
+  border-radius: 0 4px 4px 0;
+  font-weight: 600;
   z-index: 2;
 }
 
@@ -362,9 +372,11 @@ export default {
   content: "";
   position: absolute;
   left: 0;
-  bottom: -8px;
-  border-top: 8px solid #78c0d5;
-  border-left: 8px solid transparent;
+  bottom: -10px;
+  width: 0;
+  height: 0;
+  border-top: 10px solid #a1d0dd;
+  border-left: 10px solid transparent;
 }
 
 .hero-card {

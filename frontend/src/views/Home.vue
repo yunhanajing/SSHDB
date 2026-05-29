@@ -169,29 +169,26 @@
 
         <div class="example-grid">
           <article
-            v-for="example in examples"
+            v-for="(example, index) in examples"
             :key="example.title"
             class="example-card"
           >
-            <img :src="example.image" :alt="example.title" />
+            <el-image
+              class="example-image"
+              :src="example.image"
+              :alt="example.title"
+              :preview-src-list="examplePreviewImages"
+              :initial-index="index"
+              fit="contain"
+              preview-teleported
+              hide-on-click-modal
+            />
             <h3>{{ example.title }}</h3>
           </article>
+          <p class="example-copyright">&copy; 2025 SSHDB. All rights reserved.</p>
         </div>
       </section>
     </main>
-
-    <footer class="site-footer">
-      <div class="footer-links">
-        <a href="#">Help</a>
-        <a href="#">Contact</a>
-        <a href="#">Tutorial</a>
-        <a href="#">FAQ</a>
-        <a href="#">Terms of Use</a>
-        <a href="#">Privacy</a>
-        <a href="#">Citation</a>
-      </div>
-      <p>© 2025 SSHDB. All rights reserved.</p>
-    </footer>
   </div>
 </template>
 
@@ -385,30 +382,16 @@ const features = [
 
 const examples = [
   {
-    title: 'Sequence similarity network of NifH proteins',
-    image: '/image/examples/network.png'
+    title: 'Sequence Alignment Example',
+    image: '/image/examples/seq-align.jpg'
   },
   {
-    title: 'Structural alignment of NifD homologs',
+    title: 'Structural Comparison Example',
     image: '/image/examples/structure-alignment.png'
   },
-  {
-    title: 'Multiple sequence alignment of NifK proteins',
-    image: '/image/examples/msa.png'
-  },
-  {
-    title: 'Phylogenetic tree of NifH proteins',
-    image: '/image/examples/tree.png'
-  },
-  {
-    title: 'Distribution of SNF proteins across species',
-    image: '/image/examples/map.png'
-  },
-  {
-    title: '3D structure visualization of NifE protein',
-    image: '/image/examples/protein-3d.png'
-  }
 ]
+
+const examplePreviewImages = examples.map(example => example.image)
 
 function handleSearch() {
   const query = keyword.value.trim()
@@ -950,68 +933,54 @@ function scrollSpecies(direction, trackName) {
 
 /* Examples */
 .example-grid {
+  width: 100%;
+  margin: 0;
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 12px;
+  grid-template-columns: minmax(220px, 360px) minmax(220px, 360px) 1fr;
+  gap: clamp(16px, 2.6vw, 40px);
+  align-items: end;
 }
 
 .example-card {
-  padding: 12px;
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  text-align: center;
-  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  text-align: left;
 }
 
-.example-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(20, 62, 112, 0.1);
-}
-
-.example-card img {
+.example-image {
   width: 100%;
-  height: 112px;
+  height: clamp(180px, 13vw, 220px);
+  display: block;
+  margin-bottom: 12px;
+  padding: 12px;
+  border: 1px solid #e4eef8;
+  border-radius: 5px;
+  background: #fff;
+  cursor: zoom-in;
+}
+
+.example-image :deep(.el-image__inner) {
+  width: 100%;
+  height: 100%;
   object-fit: contain;
-  margin-bottom: 10px;
-  border-radius: 8px;
-  background: #f7fbff;
 }
 
 .example-card h3 {
   margin: 0;
   color: #071b3f;
-  font-size: 13px;
-  line-height: 1.35;
+  font-size: 15px;
+  line-height: 1.4;
+  font-weight: 700;
 }
 
-/* Footer */
-.site-footer {
-  max-width: 1480px;
-  margin: 0 auto;
-  padding: 14px 32px 24px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-  color: #52627a;
-  font-size: 13px;
-}
-
-.footer-links {
-  display: flex;
-  align-items: center;
-  gap: 34px;
-  flex-wrap: wrap;
-}
-
-.footer-links a {
-  color: #075bd8;
-  text-decoration: none;
-}
-
-.site-footer p {
+.example-copyright {
+  justify-self: end;
   margin: 0;
+  color: #52627a;
+  font-size: 14px;
+  line-height: 1.4;
   white-space: nowrap;
 }
 
@@ -1048,7 +1017,17 @@ function scrollSpecies(direction, trackName) {
   }
 
   .example-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+  }
+
+  .example-copyright {
+    grid-column: 1 / -1;
+    justify-self: end;
+  }
+
+  .example-image {
+    height: clamp(170px, 26vw, 220px);
   }
 }
 
@@ -1068,8 +1047,7 @@ function scrollSpecies(direction, trackName) {
   }
 
   .hero-content,
-  .main-content,
-  .site-footer {
+  .main-content {
     padding-left: 18px;
     padding-right: 18px;
   }
@@ -1100,6 +1078,21 @@ function scrollSpecies(direction, trackName) {
     grid-template-columns: 1fr;
   }
 
+  .example-card {
+    padding: 0;
+  }
+
+  .example-image {
+    height: clamp(150px, 48vw, 210px);
+    padding: 8px;
+  }
+
+  .example-copyright {
+    grid-column: 1 / -1;
+    justify-self: start;
+    font-size: 12px;
+  }
+
   .feature-card {
     border-right: none;
     border-bottom: 1px solid var(--line);
@@ -1109,12 +1102,7 @@ function scrollSpecies(direction, trackName) {
     border-bottom: none;
   }
 
-  .site-footer {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .site-footer p {
+  .example-copyright {
     white-space: normal;
   }
 }

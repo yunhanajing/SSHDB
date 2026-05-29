@@ -7,8 +7,8 @@
  * Please email comments and suggestions to zhang@zhanggroup.org    *
  ********************************************************************
 
-Name of Structure_1: C:\Users\huhu\AppData\Local\Temp\tmp5cu8kc6c\structure_1.pdb:A (to be superimposed onto Structure_2)
-Name of Structure_2: C:\Users\huhu\AppData\Local\Temp\tmp5cu8kc6c\structure_2.pdb:A
+Name of Structure_1: C:\Users\huhu\AppData\Local\Temp\tmpprvjbzb2\structure_1.pdb:A (to be superimposed onto Structure_2)
+Name of Structure_2: C:\Users\huhu\AppData\Local\Temp\tmpprvjbzb2\structure_2.pdb:A
 Length of Structure_1: 46 residues
 Length of Structure_2: 76 residues
 

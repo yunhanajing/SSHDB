@@ -1,139 +1,10 @@
 <template>
-  <div class="page about-page">
-    <!-- About Hero -->
-    <section class="section-card hero-card">
-      <div class="section-label">About</div>
+  <div class="about-page">
+    <div class="page-container">
 
-      <div class="hero-inner">
-        <div class="hero-illustration">
-          <div class="plant-scene">
-            <div class="dna">⌁</div>
-            <div class="plant">
-              <div class="stem"></div>
-              <div class="leaf leaf-left"></div>
-              <div class="leaf leaf-right"></div>
-              <div class="soil"></div>
-            </div>
-            <div class="circle circle-one"></div>
-            <div class="circle circle-two"></div>
-          </div>
-        </div>
-
-        <div class="hero-content">
-          <h1>PlantGenomics Research Group</h1>
-          <p>
-            Our group develops a comprehensive plant gene and protein information platform and is
-            dedicated to plant genomics, comparative genomics, gene family analysis, protein function
-            prediction, and bioinformatics tool development.
-          </p>
-          <p>
-            The platform supports gene discovery, annotation, sequence analysis, structure comparison,
-            and data sharing to empower plant biology research.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Research Highlights -->
-    <section class="info-grid three-columns">
-      <div class="info-card">
-        <div class="icon-circle green">
-          <i class="iconfont">🌱</i>
-        </div>
-        <div>
-          <h3>Our Research</h3>
-          <p>
-            We focus on plant genomics, comparative genomics, gene family evolution,
-            transcriptomics, and functional bioinformatics.
-          </p>
-        </div>
-      </div>
-
-      <div class="info-card">
-        <div class="icon-circle blue">
-          <i class="iconfont">◎</i>
-        </div>
-        <div>
-          <h3>Platform Mission</h3>
-          <p>
-            Our mission is to build an accessible, reliable and user-friendly database and analysis
-            platform for plant research.
-          </p>
-        </div>
-      </div>
-
-      <div class="info-card">
-        <div class="icon-circle purple">
-          <i class="iconfont">👥</i>
-        </div>
-        <div>
-          <h3>Who We Serve</h3>
-          <p>
-            We support students, bioinformaticians, molecular biologists, and plant science
-            researchers worldwide.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Platform Overview -->
-    <section class="section-card overview-card">
-      <div class="section-label">Platform Overview</div>
-
-      <div class="overview-grid">
-        <div class="overview-item">
-          <div class="icon-circle blue">
-            <i>🔍</i>
-          </div>
-          <div>
-            <h3>Gene Search</h3>
-            <p>
-              Search genes by ID, keyword, or symbol across species and genome versions.
-            </p>
-          </div>
-        </div>
-
-        <div class="overview-item">
-          <div class="icon-circle green">
-            <i>🧬</i>
-          </div>
-          <div>
-            <h3>Protein Information</h3>
-            <p>
-              Browse protein sequences, domains, motifs, features, and annotations.
-            </p>
-          </div>
-        </div>
-
-        <div class="overview-item">
-          <div class="icon-circle orange">
-            <i>☰</i>
-          </div>
-          <div>
-            <h3>Sequence Alignment</h3>
-            <p>
-              Perform BLASTP local alignment and MAFFT global alignment.
-            </p>
-          </div>
-        </div>
-
-        <div class="overview-item">
-          <div class="icon-circle purple">
-            <i>🔗</i>
-          </div>
-          <div>
-            <h3>Structure Comparison</h3>
-            <p>
-              Compare protein structures and inspect structural similarity.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Research Group -->
-    <section class="section-card group-card">
-      <div class="section-label">Research Group</div>
+      <!-- Research Group -->
+      <section class="panel-card group-card">
+        <div class="panel-tag">Research Group</div>
 
       <div class="group-layout">
         <div class="group-intro">
@@ -174,12 +45,12 @@
           </div>
         </div>
       </div>
-    </section>
+      </section>
 
-    <!-- Bottom Row -->
-    <section class="bottom-grid">
-      <div class="section-card bottom-card">
-        <div class="section-label">Data Resources</div>
+      <!-- Bottom Row -->
+      <section class="bottom-grid">
+        <div class="panel-card bottom-card">
+          <div class="panel-tag">Data Resources</div>
 
         <div class="bottom-content">
           <div class="large-icon blue-text">▱</div>
@@ -191,8 +62,8 @@
         </div>
       </div>
 
-      <div class="section-card bottom-card">
-        <div class="section-label">Citation</div>
+        <div class="panel-card bottom-card">
+          <div class="panel-tag">Citation</div>
 
         <div class="citation-layout">
           <div class="quote-box">
@@ -208,7 +79,8 @@
           </button>
         </div>
       </div>
-    </section>
+      </section>
+    </div>
   </div>
 </template>
 
@@ -232,46 +104,57 @@ export default {
 </script>
 
 <style scoped>
-.page {
+.about-page {
+  width: 100%;
   min-height: 100vh;
-  padding: 32px 54px 56px;
+  padding: 24px;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
   background: #f4f8fb;
   color: #303746;
   font-family: "Arial", "Helvetica", sans-serif;
 }
 
-.section-card,
+.page-container {
+  width: 100%;
+  max-width: 1600px;
+}
+
+.panel-card,
 .info-card {
   position: relative;
+  width: 100%;
   background: #ffffff;
-  border: 1px solid #e4ebf2;
-  border-radius: 6px;
-  box-shadow: 0 2px 10px rgba(39, 70, 115, 0.08);
+  border: 1px solid #dcdfe6;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  box-sizing: border-box;
 }
 
-.section-label {
+.panel-tag {
   position: absolute;
-  top: 14px;
-  left: -8px;
-  min-width: 118px;
-  height: 36px;
-  padding: 0 18px;
-  line-height: 36px;
+  top: 16px;
+  left: -10px;
+  background: #b2e6f5;
   color: #ffffff;
-  font-size: 15px;
-  font-weight: 700;
-  background: #a7dceb;
-  border-radius: 3px 3px 3px 0;
-  text-align: center;
+  font-size: 18px;
+  line-height: 1;
+  padding: 12px 22px;
+  border-radius: 0 4px 4px 0;
+  font-weight: 600;
+  z-index: 2;
 }
 
-.section-label::after {
+.panel-tag::before {
   content: "";
   position: absolute;
   left: 0;
-  bottom: -8px;
-  border-top: 8px solid #78c0d5;
-  border-left: 8px solid transparent;
+  bottom: -10px;
+  width: 0;
+  height: 0;
+  border-top: 10px solid #a1d0dd;
+  border-left: 10px solid transparent;
 }
 
 .hero-card {
@@ -489,6 +372,7 @@ export default {
   grid-template-columns: 1fr 1.35fr;
   gap: 44px;
   align-items: center;
+  margin-top: 18px;
 }
 
 .group-intro {
@@ -555,6 +439,7 @@ export default {
   grid-template-columns: 92px 1fr;
   gap: 22px;
   align-items: center;
+  margin-top: 18px;
 }
 
 .bottom-content p {
@@ -573,6 +458,7 @@ export default {
   grid-template-columns: 1fr 150px;
   gap: 24px;
   align-items: center;
+  margin-top: 18px;
 }
 
 .quote-box {
@@ -636,8 +522,8 @@ export default {
 }
 
 @media (max-width: 720px) {
-  .page {
-    padding: 20px 16px;
+  .about-page {
+    padding: 16px;
   }
 
   .info-grid.three-columns,

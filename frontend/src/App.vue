@@ -62,8 +62,6 @@
 
           <el-menu-item index="/test">Download</el-menu-item>
 
-          <el-menu-item index="/help">Help</el-menu-item>
-
           <el-menu-item index="/about">About</el-menu-item>
         </el-menu>
       </div>
