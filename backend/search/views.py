@@ -2,7 +2,11 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .services import SearchInputError, protein_embedding_search
+from .services import (
+    SearchInputError,
+    get_example_protein,
+    protein_embedding_search,
+)
 
 
 def get_float_param(request, *names, default=None):
@@ -151,3 +155,40 @@ class ProteinEmbeddingSearchAPIView(APIView):
                 },
                 status=status.HTTP_400_BAD_REQUEST,
             )
+
+
+class ExampleProteinAPIView(APIView):
+    def get(self, request):
+        query_species = request.GET.get("query_species", "").strip()
+
+        if not query_species:
+            return Response(
+                {
+                    "code": 400,
+                    "message": "query_species is required",
+                    "data": None,
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        try:
+            payload = get_example_protein(query_species)
+        except SearchInputError as exc:
+            return Response(
+                {
+                    "code": 400,
+                    "message": str(exc),
+                    "data": None,
+                    "meta": exc.data,
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        return Response(
+            {
+                "code": 200,
+                "message": "success",
+                "data": payload,
+            },
+            status=status.HTTP_200_OK,
+        )

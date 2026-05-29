@@ -1,12 +1,17 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-const IndexView = () => import('../views/Index.vue')
 const HomeView = () => import('../views/Home.vue')
-const TestView = () => import('../views/test.vue')
+const IndexView = () => import('../views/Index.vue')
 const GeneInfoPage = () => import('../views/GeneInfoPage.vue')
 const ProteinDetail = () => import('../views/components/ProteinDetail.vue')
+
 const SequenceAlignment = () => import('../views/SequenceAlignment.vue')
+const StructureAlignment = () => import('../views/StructureAlignment.vue')
 const StructureCandidateSearch = () => import('../views/StructureCandidateSearch.vue')
+const JBrowse = () => import('../views/JBrowse.vue')
+
+const About = () => import('../views/About.vue')
+const Help = () => import('../views/Help.vue')
 
 const routes = [
   {
@@ -16,44 +21,51 @@ const routes = [
   },
   {
     path: '/search',
-    name: 'index',
+    name: 'search',
     component: IndexView
   },
   {
-    path: '/structure-candidate-search',
-    name: 'StructureCandidateSearch',
-    component: StructureCandidateSearch
-  },
-  {
-    path: '/test',
-    name: 'test',
-    component: TestView
-  },
-  {
     path: '/gene-info',
-    name: 'gene-info',
+    name: 'geneInfo',
     component: GeneInfoPage
   },
   {
     path: '/protein/detail',
-    name: 'ProteinDetail',
+    name: 'proteinDetail',
     component: ProteinDetail
+  },
+
+  // Tools 下的页面
+  {
+    path: '/jbrowse',
+    name: 'jbrowse',
+    component: JBrowse
   },
   {
     path: '/sequence-alignment',
-    name: 'SequenceAlignment',
+    name: 'sequenceAlignment',
     component: SequenceAlignment
   },
   {
-  path: '/jbrowse',
-  name: 'JBrowse',
-  component: () => import('@/views/JBrowse.vue'),
+    path: '/structure-alignment',
+    name: 'structureAlignment',
+    component: StructureAlignment
   },
   {
-    path: '/structure-alignment',
-    name: 'StructureAlignment',
-    component: () => import('@/views/StructureAlignment.vue'),
+    path: '/structure-candidate-search',
+    name: 'structureCandidateSearch',
+    component: StructureCandidateSearch
   },
+  {
+    path: '/help',
+    name: 'help',
+    component: Help
+  },
+  {
+    path: '/about',
+    name: 'about',
+    component: About
+  }
 ]
 
 const router = createRouter({

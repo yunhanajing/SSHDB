@@ -78,7 +78,7 @@
                 <el-input
                   v-model="searchForm.proteinId"
                   clearable
-                  placeholder="eg. NP_001310781.1"
+                  :placeholder="proteinIdPlaceholder"
                   class="search-control protein-control"
                 />
               </el-form-item>
@@ -354,13 +354,13 @@ import {
 import { ElMessage } from 'element-plus'
 import request from '@/utils/request'
 
-const DEFAULT_PROTEIN_ID = 'Glyma_01G000100'
+const DEFAULT_PROTEIN_ID = ''
 
 const DEFAULT_QUERY_SPECIES = 'Glycine max'
 const DEFAULT_QUERY_GENOME_NAME = 'Glycine_max_Wm82v6'
 
-const DEFAULT_TARGET_SPECIES = 'Oryza sativa'
-const DEFAULT_TARGET_GENOME_NAME = 'osa1_r7'
+const DEFAULT_TARGET_SPECIES = 'Lotus japonicus'
+const DEFAULT_TARGET_GENOME_NAME = 'MG20.gnm3.QPGB'
 
 const DEFAULT_SIMILARITY_MIN = 0
 const DEFAULT_SIMILARITY_MAX = 100
@@ -382,6 +382,10 @@ const speciesOptions = ref([])
 const queryGenomeOptions = ref([])
 const targetGenomeOptions = ref([])
 const speciesLoading = ref(false)
+const exampleProteinId = ref('')
+const exampleProteinLoading = ref(false)
+
+let exampleProteinRequestId = 0
 
 const tableKeyword = ref('')
 const currentPage = ref(1)
@@ -402,6 +406,18 @@ const similarityOptions = Array.from(
 
 const maxSimilarityOptions = computed(() => {
   return similarityOptions.filter((item) => item >= searchForm.similarityMin)
+})
+
+const proteinIdPlaceholder = computed(() => {
+  if (exampleProteinId.value) {
+    return `eg. ${exampleProteinId.value}`
+  }
+
+  if (!searchForm.queryGenomeName) {
+    return 'Select query genome version first'
+  }
+
+  return 'eg. 示例蛋白'
 })
 
 const filteredTableData = computed(() => {
@@ -445,6 +461,74 @@ watch(tableKeyword, () => {
   currentPage.value = 1
 })
 
+watch(
+  () => searchForm.queryGenomeName,
+  (genomeName, oldGenomeName) => {
+    if (genomeName === oldGenomeName) return
+
+    resultMeta.value = null
+    tableData.value = []
+    currentPage.value = 1
+    searchForm.proteinId = ''
+
+    if (genomeName) {
+      fetchExampleProtein(genomeName)
+      return
+    }
+
+    clearExampleProtein()
+  }
+)
+
+const clearExampleProtein = () => {
+  exampleProteinRequestId += 1
+  exampleProteinId.value = ''
+  exampleProteinLoading.value = false
+  searchForm.proteinId = ''
+}
+
+const fetchExampleProtein = async (queryGenomeName) => {
+  const genomeName = String(queryGenomeName || '').trim()
+
+  if (!genomeName) {
+    clearExampleProtein()
+    return
+  }
+
+  const requestId = ++exampleProteinRequestId
+  exampleProteinLoading.value = true
+  exampleProteinId.value = ''
+
+  try {
+    const res = await request.get('/search/protein-example/', {
+      params: {
+        query_species: genomeName
+      }
+    })
+
+    if (requestId !== exampleProteinRequestId) return
+
+    const proteinId = res.data?.data?.protein_id || ''
+    exampleProteinId.value = proteinId
+
+    if (!proteinId) {
+      ElMessage.warning('No example protein found for selected query genome.')
+    }
+  } catch (error) {
+    if (requestId !== exampleProteinRequestId) return
+
+    console.error('Failed to fetch example protein:', error)
+    exampleProteinId.value = ''
+    ElMessage.warning(
+      error?.response?.data?.message || 'Failed to load example protein'
+    )
+  } finally {
+    if (requestId === exampleProteinRequestId) {
+      exampleProteinLoading.value = false
+    }
+  }
+}
+
 const fetchSpeciesOptions = async () => {
   speciesLoading.value = true
 
@@ -467,6 +551,7 @@ const fetchSpeciesOptions = async () => {
       .sort((a, b) => a.label.localeCompare(b.label))
 
     initDefaultGenomes()
+    fetchExampleProtein(searchForm.queryGenomeName)
   } catch (error) {
     console.error('Failed to fetch species options:', error)
     speciesGenomeData.value = []
@@ -553,12 +638,14 @@ const initDefaultGenomes = () => {
 
 const handleQuerySpeciesChange = (species) => {
   searchForm.queryGenomeName = ''
+  searchForm.proteinId = ''
   resultMeta.value = null
   tableData.value = []
   currentPage.value = 1
 
   if (!species) {
     queryGenomeOptions.value = []
+    clearExampleProtein()
     return
   }
 
@@ -574,10 +661,12 @@ const handleQuerySpeciesChange = (species) => {
 const handleQuerySpeciesClear = () => {
   searchForm.querySpecies = ''
   searchForm.queryGenomeName = ''
+  searchForm.proteinId = ''
   queryGenomeOptions.value = []
   resultMeta.value = null
   tableData.value = []
   currentPage.value = 1
+  clearExampleProtein()
 }
 
 const handleTargetSpeciesChange = (species) => {
@@ -710,6 +799,7 @@ const handleReset = () => {
   sortState.order = ''
   tableData.value = []
   resultMeta.value = null
+  clearExampleProtein()
 }
 
 const handlePageSizeChange = () => {

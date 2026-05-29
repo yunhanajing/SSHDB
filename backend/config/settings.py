@@ -156,3 +156,5 @@ USALIGN_ALIGNMENT_BLOCK_SIZE = 60
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
+
+PROTEIN_EXAMPLE_JSON_PATH = r"D:\for_wangge_protein\first_protein_examples.json"

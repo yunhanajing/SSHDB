@@ -1,0 +1,1262 @@
+{
+  "data": {
+    "Aalba": {
+      "species_id": 1,
+      "protein_id": "AALBA5B000004P1"
+    },
+    "Aalpina": {
+      "species_id": 2,
+      "protein_id": "Aa_G10.t1"
+    },
+    "Aannua": {
+      "species_id": 3,
+      "protein_id": "PWA13591.1"
+    },
+    "Achinensis": {
+      "species_id": 4,
+      "protein_id": "PSR70400.1"
+    },
+    "Acoerulea": {
+      "species_id": 5,
+      "protein_id": "PIA24647.1"
+    },
+    "Acoerulea_322": {
+      "species_id": 6,
+      "protein_id": "Aqcoe0131s0001.1"
+    },
+    "Acomosus": {
+      "species_id": 7,
+      "protein_id": "Aco031087"
+    },
+    "Aduranensis": {
+      "species_id": 8,
+      "protein_id": "aradu.V14167.gnm1.ann1.Aradu.20JM2.1"
+    },
+    "Afiliculoides": {
+      "species_id": 9,
+      "protein_id": "Azfi_s0093.g043301.AMT2"
+    },
+    "Agraveolens": {
+      "species_id": 10,
+      "protein_id": "KAF1001336.1"
+    },
+    "Ahalleri": {
+      "species_id": 11,
+      "protein_id": "Araha.32801s0005"
+    },
+    "Ahypochondriacus": {
+      "species_id": 12,
+      "protein_id": "AH023820-RA"
+    },
+    "AhypogaeaLine8_886_v1.3": {
+      "species_id": 13,
+      "protein_id": "AhLine8.01G000100.1.p"
+    },
+    "Ahypogaea": {
+      "species_id": 14,
+      "protein_id": "arahy.Tifrunner.gnm2.ann1.A84CEX.1"
+    },
+    "Ahypogaea_GDAAS": {
+      "species_id": 15,
+      "protein_id": "RYQ78804.1"
+    },
+    "Ahypogaea_Shitouqi": {
+      "species_id": 16,
+      "protein_id": "QHN75376.1"
+    },
+    "Aipaensis": {
+      "species_id": 17,
+      "protein_id": "araip.K30076.gnm1.ann1.Araip.XHY4U.1"
+    },
+    "Alappa": {
+      "species_id": 18,
+      "protein_id": "KAI3662641.1"
+    },
+    "Alyrata": {
+      "species_id": 19,
+      "protein_id": "AL706U10010"
+    },
+    "Aofficinalis": {
+      "species_id": 20,
+      "protein_id": "evm.model.AsparagusV1_Unassigned.380"
+    },
+    "Aprecatorius": {
+      "species_id": 21,
+      "protein_id": "Aprec_027329145.1"
+    },
+    "Arufa": {
+      "species_id": 22,
+      "protein_id": "GFS28099.1"
+    },
+    "Ashenzhenica": {
+      "species_id": 23,
+      "protein_id": "PKA45566.1"
+    },
+    "Atauschii_BW01105": {
+      "species_id": 24,
+      "protein_id": "BW_01105.r1.G00000030.1"
+    },
+    "Athaliana_447_Araport11": {
+      "species_id": 25,
+      "protein_id": "ATCG00500.1"
+    },
+    "Athaliana": {
+      "species_id": 26,
+      "protein_id": "ATCG00500.1"
+    },
+    "Atrichopoda": {
+      "species_id": 27,
+      "protein_id": "NP_001292752.1"
+    },
+    "Ayangbiense": {
+      "species_id": 28,
+      "protein_id": "KAF4609367.1"
+    },
+    "Balternifolia": {
+      "species_id": 29,
+      "protein_id": "KAG8362577.1"
+    },
+    "Bceiba.fixed": {
+      "species_id": 30,
+      "protein_id": "cei.Scaffold1.1_CDS"
+    },
+    "Bdistachyon_556_v3.2": {
+      "species_id": 31,
+      "protein_id": "Bradi1g55470.1.p"
+    },
+    "Bdistachyon": {
+      "species_id": 32,
+      "protein_id": "Bradi0180s00100"
+    },
+    "Bhispida": {
+      "species_id": 33,
+      "protein_id": "BhiUN1013M2"
+    },
+    "Boleraceacapitata": {
+      "species_id": 34,
+      "protein_id": "Bol017642"
+    },
+    "BrapaFPsc": {
+      "species_id": 35,
+      "protein_id": "Brara.K01534"
+    },
+    "Bstricta": {
+      "species_id": 36,
+      "protein_id": "Bostr.15816s0001.1.p"
+    },
+    "Bvariegata": {
+      "species_id": 37,
+      "protein_id": "KAI4294818.1"
+    },
+    "Bvulgaris": {
+      "species_id": 38,
+      "protein_id": "NP_001289992.1"
+    },
+    "Camericana": {
+      "species_id": 39,
+      "protein_id": "Calam.04G132000.1"
+    },
+    "Camplexicaulis": {
+      "species_id": 40,
+      "protein_id": "Caamp.0096s0014.1.p"
+    },
+    "Camsinensis": {
+      "species_id": 41,
+      "protein_id": "KAF5929869.1"
+    },
+    "CannuumCM334": {
+      "species_id": 42,
+      "protein_id": "CA01g00010"
+    },
+    "Cannuumglabriusculum": {
+      "species_id": 43,
+      "protein_id": "Capang05g001402"
+    },
+    "Cannuumzunla": {
+      "species_id": 44,
+      "protein_id": "Capana01g000002"
+    },
+    "Cbaccatum": {
+      "species_id": 45,
+      "protein_id": "PHT24402.1"
+    },
+    "Carabica": {
+      "species_id": 46,
+      "protein_id": "XP_027060680.1"
+    },
+    "Cargyrosperma": {
+      "species_id": 47,
+      "protein_id": "Carg00001-RA"
+    },
+    "Carietinum_492": {
+      "species_id": 48,
+      "protein_id": "Ca_25697"
+    },
+    "Carietinum_ICC4958": {
+      "species_id": 49,
+      "protein_id": "cicar.ICC4958.gnm2.ann1.Ca_00001.1"
+    },
+    "Caustralis": {
+      "species_id": 50,
+      "protein_id": "RAL36887.1"
+    },
+    "Cbraunii": {
+      "species_id": 51,
+      "protein_id": "GBG41013.1"
+    },
+    "Ccajan": {
+      "species_id": 52,
+      "protein_id": "cajca.ICPL87119.gnm1.ann1.C.cajan_46707.1"
+    },
+    "Ccampestris": {
+      "species_id": 53,
+      "protein_id": "VFQ58225.1"
+    },
+    "Ccapsularis": {
+      "species_id": 54,
+      "protein_id": "OMO49321.1"
+    },
+    "Ccathayensis": {
+      "species_id": 55,
+      "protein_id": "CCA1534S0001"
+    },
+    "Cchinensis": {
+      "species_id": 56,
+      "protein_id": "KAF9586770.1"
+    },
+    "Ccitriodora": {
+      "species_id": 57,
+      "protein_id": "KAF7845632.1"
+    },
+    "Cclementina.fixed": {
+      "species_id": 58,
+      "protein_id": "Ccle_XP_006419185.1"
+    },
+    "Cendivia": {
+      "species_id": 59,
+      "protein_id": "KAI3475009.1"
+    },
+    "Ceugenioides": {
+      "species_id": 60,
+      "protein_id": "XP_027147770.1"
+    },
+    "Cgrandiflora": {
+      "species_id": 61,
+      "protein_id": "Cagra.5074s0001.1.p"
+    },
+    "Cgrandis": {
+      "species_id": 62,
+      "protein_id": "Cg5g031990.1"
+    },
+    "Chirsutum": {
+      "species_id": 63,
+      "protein_id": "CARHR000010.1"
+    },
+    "Chispanica": {
+      "species_id": 64,
+      "protein_id": "Crahi.0002s0308.1.p"
+    },
+    "Cichangensis": {
+      "species_id": 65,
+      "protein_id": "Ci000010.1"
+    },
+    "Cillinoinensis": {
+      "species_id": 66,
+      "protein_id": "CIL0750S0001"
+    },
+    "Cintybus": {
+      "species_id": 67,
+      "protein_id": "KAI3670139.1"
+    },
+    "Ckanehirae": {
+      "species_id": 68,
+      "protein_id": "CKAN_02728000"
+    },
+    "Clanatus": {
+      "species_id": 69,
+      "protein_id": "ClCG00G000010.1"
+    },
+    "Clittledalei": {
+      "species_id": 70,
+      "protein_id": "KAF3319705.1"
+    },
+    "Cmaritima": {
+      "species_id": 71,
+      "protein_id": "Camar.6121s0002.1.p"
+    },
+    "Cmaxima": {
+      "species_id": 72,
+      "protein_id": "CmaCh00G005170.1"
+    },
+    "Cmedica": {
+      "species_id": 73,
+      "protein_id": "Cm000010.1"
+    },
+    "Cmelo": {
+      "species_id": 74,
+      "protein_id": "MELO3C000001T1"
+    },
+    "Cmelo3.6.1": {
+      "species_id": 75,
+      "protein_id": "MELO3C027429.2.1"
+    },
+    "Cmoschata": {
+      "species_id": 76,
+      "protein_id": "CmoCh00G001120.1"
+    },
+    "Colitorius.fixed": {
+      "species_id": 77,
+      "protein_id": "Corc_OMO49311.1"
+    },
+    "Cpepo": {
+      "species_id": 78,
+      "protein_id": "Cp4.1LG00g00010.1"
+    },
+    "CpurpureusGG1": {
+      "species_id": 79,
+      "protein_id": "CepurGG1.N019300.1.p"
+    },
+    "Cquinoa": {
+      "species_id": 80,
+      "protein_id": "XP_021713431.1"
+    },
+    "Creticulata": {
+      "species_id": 81,
+      "protein_id": "MSYJ062540.1"
+    },
+    "Crubella": {
+      "species_id": 82,
+      "protein_id": "Carub.0350s0001.1.p"
+    },
+    "Csativa": {
+      "species_id": 83,
+      "protein_id": "XP_030477616.1"
+    },
+    "Csativus_9930": {
+      "species_id": 84,
+      "protein_id": "CsaV3_1G000010.1"
+    },
+    "Csinensis": {
+      "species_id": 85,
+      "protein_id": "Cs1g01010.1"
+    },
+    "Cunshiu": {
+      "species_id": 86,
+      "protein_id": "GAY31691.1"
+    },
+    "Cviolacea": {
+      "species_id": 87,
+      "protein_id": "Clevi.0143s0010.1.p"
+    },
+    "Dalata": {
+      "species_id": 88,
+      "protein_id": "Dioal.18G114200.1.p"
+    },
+    "Dcarota": {
+      "species_id": 89,
+      "protein_id": "DCAR_032182"
+    },
+    "Dcatenatum": {
+      "species_id": 90,
+      "protein_id": "Dcat020671682.1"
+    },
+    "Dcayenensis": {
+      "species_id": 91,
+      "protein_id": "XP_039113700.1"
+    },
+    "Dchrysotoxum": {
+      "species_id": 92,
+      "protein_id": "KAH0433058.1"
+    },
+    "Ddrummondii": {
+      "species_id": 93,
+      "protein_id": "Drydr87S05849"
+    },
+    "Dnobile": {
+      "species_id": 94,
+      "protein_id": "KAI0485873.1"
+    },
+    "Dsophioides": {
+      "species_id": 95,
+      "protein_id": "Desop.0192s0003.1.p"
+    },
+    "Dstrictus": {
+      "species_id": 96,
+      "protein_id": "Distr.0094s0200.1.p"
+    },
+    "Dzibethinus.fixed": {
+      "species_id": 97,
+      "protein_id": "Dzib_XP_022714417.1"
+    },
+    "Ecanadensis": {
+      "species_id": 98,
+      "protein_id": "XP_043605838.1"
+    },
+    "Ecoracana_560": {
+      "species_id": 99,
+      "protein_id": "ELECO.r07.2AG0107300.1"
+    },
+    "Ecurvula": {
+      "species_id": 100,
+      "protein_id": "TVU51826"
+    },
+    "Eguineensis": {
+      "species_id": 101,
+      "protein_id": "NP_001290488.1"
+    },
+    "Eguttata": {
+      "species_id": 102,
+      "protein_id": "XP_012827263.1"
+    },
+    "Ejaponica": {
+      "species_id": 103,
+      "protein_id": "EVM0024834.1"
+    },
+    "Esalsugineum": {
+      "species_id": 104,
+      "protein_id": "Thhalv10000734m"
+    },
+    "Esyriacum": {
+      "species_id": 105,
+      "protein_id": "Eusyr.0051s0003.1.p"
+    },
+    "Etef": {
+      "species_id": 106,
+      "protein_id": "Et_s1906-1.39-1.mrna1"
+    },
+    "Evesicaria": {
+      "species_id": 107,
+      "protein_id": "Eruve.3396s0004.1.p"
+    },
+    "Fhindsii": {
+      "species_id": 108,
+      "protein_id": "sjg288450.1"
+    },
+    "Fiinumae": {
+      "species_id": 109,
+      "protein_id": "FII_63.121"
+    },
+    "Fnilgerrensis": {
+      "species_id": 110,
+      "protein_id": "GWHPABKC000001"
+    },
+    "Fvesca_677_v4.0.a2": {
+      "species_id": 111,
+      "protein_id": "FvH4_c11g00010.t1"
+    },
+    "Fvesca": {
+      "species_id": 112,
+      "protein_id": "FvH4_c10g00030.1"
+    },
+    "Ganomalum": {
+      "species_id": 113,
+      "protein_id": "KAG8471329.1"
+    },
+    "Garboreum.fixed": {
+      "species_id": 114,
+      "protein_id": "Garb06G0635_CDS"
+    },
+    "Garidum": {
+      "species_id": 115,
+      "protein_id": "MBA0673732.1"
+    },
+    "Garmourianum.fixed": {
+      "species_id": 116,
+      "protein_id": "Garm_MBA0820837.1"
+    },
+    "Gaustrale": {
+      "species_id": 117,
+      "protein_id": "KAA3437236.1"
+    },
+    "Gbarbadense": {
+      "species_id": 118,
+      "protein_id": "KAB1668779.1"
+    },
+    "Gbiloba": {
+      "species_id": 119,
+      "protein_id": "Gb_08166"
+    },
+    "Gdarwinii.fixed": {
+      "species_id": 120,
+      "protein_id": "Gdar_TXG74500.1"
+    },
+    "Ghirsutum.fixed": {
+      "species_id": 121,
+      "protein_id": "Ghir_XP_016665182.1"
+    },
+    "Glaxum.fixed": {
+      "species_id": 122,
+      "protein_id": "Glax_MBA0703291.1"
+    },
+    "Globatum.fixed": {
+      "species_id": 123,
+      "protein_id": "Glob_MBA0547600.1"
+    },
+    "GmaxWm82": {
+      "species_id": 124,
+      "protein_id": "Glyma_07G273800"
+    },
+    "Gmustelinum.fixed": {
+      "species_id": 125,
+      "protein_id": "Gmus_TXG75336.1"
+    },
+    "Graimondii.fixed": {
+      "species_id": 126,
+      "protein_id": "Graim_XP_012434104.1"
+    },
+    "Gschwendimanii.fixed": {
+      "species_id": 127,
+      "protein_id": "Gsch_MBA0846301.1"
+    },
+    "Gsoja": {
+      "species_id": 128,
+      "protein_id": "glyso.PI483463.gnm1.ann1.GlysoPI483463.U006000.1"
+    },
+    "Gsoja_F": {
+      "species_id": 129,
+      "protein_id": "GsF4908751.1"
+    },
+    "Gstocksii": {
+      "species_id": 130,
+      "protein_id": "KAH1030120.1"
+    },
+    "Gtomentosum.fixed": {
+      "species_id": 131,
+      "protein_id": "Gtom_TXG74976.1"
+    },
+    "Gtrilobum.fixed": {
+      "species_id": 132,
+      "protein_id": "Gtri_MBA0756789.1"
+    },
+    "Hannuus": {
+      "species_id": 133,
+      "protein_id": "XP_021968739.1"
+    },
+    "Hbrasiliensis": {
+      "species_id": 134,
+      "protein_id": "KAF2281628.1"
+    },
+    "Hsyriacus": {
+      "species_id": 135,
+      "protein_id": "KAE8653681.1"
+    },
+    "Humbratica.fixed": {
+      "species_id": 136,
+      "protein_id": "Hum_XP_021273508.1"
+    },
+    "Hvulgare_462": {
+      "species_id": 137,
+      "protein_id": "HORVU0Hr1G009340.1"
+    },
+    "Hvulgare_MOREX": {
+      "species_id": 138,
+      "protein_id": "HORVU.MOREX.r3.6HG0631850.1"
+    },
+    "Iamara": {
+      "species_id": 139,
+      "protein_id": "Ibeam.9281s0002.1.p"
+    },
+    "Iglandulifera": {
+      "species_id": 140,
+      "protein_id": "XP_047306149.1"
+    },
+    "Inil": {
+      "species_id": 141,
+      "protein_id": "XP_019149646.1"
+    },
+    "Itinctoria": {
+      "species_id": 142,
+      "protein_id": "Isati.37470s0001.1.p"
+    },
+    "Itriloba": {
+      "species_id": 143,
+      "protein_id": "XP_031090453.1"
+    },
+    "Jcathayensis": {
+      "species_id": 144,
+      "protein_id": "Juct_00000.t1"
+    },
+    "Jhindsii": {
+      "species_id": 145,
+      "protein_id": "Juhi_00000.t1"
+    },
+    "Jmicrocarpa": {
+      "species_id": 146,
+      "protein_id": "Jumi_00000.t1"
+    },
+    "Jnigra": {
+      "species_id": 147,
+      "protein_id": "Juni_00000.t1"
+    },
+    "Jregia": {
+      "species_id": 148,
+      "protein_id": "Jr01_00010.p1"
+    },
+    "Jsigillata": {
+      "species_id": 149,
+      "protein_id": "Jusi_00000.t1"
+    },
+    "Jsinuosa": {
+      "species_id": 150,
+      "protein_id": "Jalsin_CLE9"
+    },
+    "Lalbus": {
+      "species_id": 151,
+      "protein_id": "Lalb_Chr00c01g0403611"
+    },
+    "Lalbus_Amiga": {
+      "species_id": 152,
+      "protein_id": "LaA9584072.1"
+    },
+    "Langustifolius": {
+      "species_id": 153,
+      "protein_id": "lupan.Tanjil.gnm1.ann1.Lup000001.1"
+    },
+    "Lannua": {
+      "species_id": 154,
+      "protein_id": "Luann.0830s0001.1.p"
+    },
+    "Lchinense": {
+      "species_id": 155,
+      "protein_id": "Lchi33543"
+    },
+    "Lgibba7742": {
+      "species_id": 156,
+      "protein_id": "Lg7742Ab001g000010_T001"
+    },
+    "Ljaponica7182": {
+      "species_id": 157,
+      "protein_id": "Lj7182a15Mg000010_T001"
+    },
+    "Ljaponica8627": {
+      "species_id": 158,
+      "protein_id": "Lj8627b06Tg000010_T001"
+    },
+    "Ljaponica9421": {
+      "species_id": 159,
+      "protein_id": "Lj9421a06Mg000010_T001"
+    },
+    "Ljaponicus": {
+      "species_id": 160,
+      "protein_id": "lotja.MG20.gnm3.ann1.Ljchlorog3v0000020.1"
+    },
+    "Lminor7210": {
+      "species_id": 161,
+      "protein_id": "Lm7210a001g000010_T001"
+    },
+    "Lperrieri": {
+      "species_id": 162,
+      "protein_id": "LPERR01G00010.1"
+    },
+    "Lsaligna": {
+      "species_id": 163,
+      "protein_id": "CAB4070995.1"
+    },
+    "Lsativa": {
+      "species_id": 164,
+      "protein_id": "XP_023728126.1"
+    },
+    "Lsativum": {
+      "species_id": 165,
+      "protein_id": "Lesat.0060s0072.1.p"
+    },
+    "Lsiceraria": {
+      "species_id": 166,
+      "protein_id": "Lsi05G008500.1"
+    },
+    "Lturionifera9434": {
+      "species_id": 167,
+      "protein_id": "Lt9434a00Ug000360_T001"
+    },
+    "Macuminata": {
+      "species_id": 168,
+      "protein_id": "Macma4_Mt_g00010.1"
+    },
+    "Mannua": {
+      "species_id": 169,
+      "protein_id": "XP_050203252.1"
+    },
+    "Mbaccata": {
+      "species_id": 170,
+      "protein_id": "MABA000001"
+    },
+    "Mbalbisiana": {
+      "species_id": 171,
+      "protein_id": "THU42066.1"
+    },
+    "Mbiondii": {
+      "species_id": 172,
+      "protein_id": "MBI00118_MAGBIO"
+    },
+    "Mcandidum": {
+      "species_id": 173,
+      "protein_id": "KAI4294735.1"
+    },
+    "Mcharantia.fixed": {
+      "species_id": 174,
+      "protein_id": "Mch_XP_022131230.1"
+    },
+    "Mdomestica_491_v1.1": {
+      "species_id": 175,
+      "protein_id": "MD10G1276500"
+    },
+    "Mdomestica": {
+      "species_id": 176,
+      "protein_id": "HF01675-RA"
+    },
+    "Mesculenta": {
+      "species_id": 177,
+      "protein_id": "XP_021591735.1"
+    },
+    "Mindica": {
+      "species_id": 178,
+      "protein_id": "XP_044460437.1"
+    },
+    "Mintegrifolia": {
+      "species_id": 179,
+      "protein_id": "XP_042474805.1"
+    },
+    "Mmaritima": {
+      "species_id": 180,
+      "protein_id": "Mamar.0962s0001.1.p"
+    },
+    "Mmicrantha": {
+      "species_id": 181,
+      "protein_id": "KAC9099667.1"
+    },
+    "Mpaleacea": {
+      "species_id": 182,
+      "protein_id": "KAG6539744.1"
+    },
+    "Mperfoliatum": {
+      "species_id": 183,
+      "protein_id": "Myper.0082s0026.1.p"
+    },
+    "Msinensis_497": {
+      "species_id": 184,
+      "protein_id": "MisinT562900.1.p"
+    },
+    "Mtroglodytarum": {
+      "species_id": 185,
+      "protein_id": "URD71818.1"
+    },
+    "Medic": {
+      "species_id": 186,
+      "protein_id": "Medtr1611s0010"
+    },
+    "Ncolorata": {
+      "species_id": 187,
+      "protein_id": "XP_031472475.1"
+    },
+    "Nattenuata": {
+      "species_id": 188,
+      "protein_id": "NIATv7_g18710.t1"
+    },
+    "Nbenthamiana": {
+      "species_id": 189,
+      "protein_id": "Niben101Scf03546g00006.1"
+    },
+    "Ntabacum": {
+      "species_id": 190,
+      "protein_id": "NitabCLE9"
+    },
+    "Nnucifera": {
+      "species_id": 191,
+      "protein_id": "DAD49220.1"
+    },
+    "Nnucifera_185": {
+      "species_id": 192,
+      "protein_id": "NP_001289771.1"
+    },
+    "Nsinensis": {
+      "species_id": 193,
+      "protein_id": "KAA8514701.1"
+    },
+    "Nthermarum": {
+      "species_id": 194,
+      "protein_id": "KAF3771455.1"
+    },
+    "Obrachyantha": {
+      "species_id": 195,
+      "protein_id": "OB0037G10010.1"
+    },
+    "Oeuropaea": {
+      "species_id": 196,
+      "protein_id": "XP_022841408.1"
+    },
+    "Oglaberrima": {
+      "species_id": 197,
+      "protein_id": "ORGLA01G0000100.1"
+    },
+    "Olatifolia": {
+      "species_id": 198,
+      "protein_id": "Ola000001.1"
+    },
+    "Omeridionalis.fixed": {
+      "species_id": 199,
+      "protein_id": "OMERI01G00010.1"
+    },
+    "Rice": {
+      "species_id": 200,
+      "protein_id": "LOC_Os01g01010.1"
+    },
+    "Osativa": {
+      "species_id": 201,
+      "protein_id": "ChrUn.fgenesh.gene.8"
+    },
+    "Othomaeum": {
+      "species_id": 202,
+      "protein_id": "Oropetium_20150105_28289A"
+    },
+    "Pabies": {
+      "species_id": 203,
+      "protein_id": "MA_10000213g0010"
+    },
+    "PacutifoliusWLD": {
+      "species_id": 204,
+      "protein_id": "Phacu.WLD.L010840.1"
+    },
+    "Palba": {
+      "species_id": 205,
+      "protein_id": "Palba.034886735.1"
+    },
+    "Parmeniaca_Marouch": {
+      "species_id": 206,
+      "protein_id": "PruarM.1G000100.t1.p1_1"
+    },
+    "Parmeniaca_Stella": {
+      "species_id": 207,
+      "protein_id": "PruarS.100029G000100.t1.p1_1"
+    },
+    "Pavium": {
+      "species_id": 208,
+      "protein_id": "Pav_co3988703.1_g010.1.br"
+    },
+    "Pbetulifolia": {
+      "species_id": 209,
+      "protein_id": "GWHPAAYT000001"
+    },
+    "Pdactylifera": {
+      "species_id": 210,
+      "protein_id": "NP_001288605.1"
+    },
+    "Pdeltoides": {
+      "species_id": 211,
+      "protein_id": "KAH8479259.1"
+    },
+    "Pdulcis": {
+      "species_id": 212,
+      "protein_id": "Pdul.034196717.1"
+    },
+    "Pequestris": {
+      "species_id": 213,
+      "protein_id": "Peq020570575.1"
+    },
+    "Paxillaris": {
+      "species_id": 214,
+      "protein_id": "PeaxCLE9"
+    },
+    "Pinflata": {
+      "species_id": 215,
+      "protein_id": "PeCLE9"
+    },
+    "Peuphratica": {
+      "species_id": 216,
+      "protein_id": "Peup_010999288.1"
+    },
+    "Pferganensis": {
+      "species_id": 217,
+      "protein_id": "Pfer.scaffold_2399.1"
+    },
+    "Pfortunei": {
+      "species_id": 218,
+      "protein_id": "KAI3443336.1"
+    },
+    "Pfrutescens": {
+      "species_id": 219,
+      "protein_id": "KAH6754733.1"
+    },
+    "Pfrutescens_hirtella": {
+      "species_id": 220,
+      "protein_id": "KAH6754727.1"
+    },
+    "Pgranatum": {
+      "species_id": 221,
+      "protein_id": "XP_031371363.1"
+    },
+    "Phygri1.3.fixed": {
+      "species_id": 222,
+      "protein_id": "PhygriCg000010.1"
+    },
+    "Phallii": {
+      "species_id": 223,
+      "protein_id": "Pahal.J017300.1.p"
+    },
+    "PhalliiHAL": {
+      "species_id": 224,
+      "protein_id": "PhHAL.6G178000.1.p"
+    },
+    "Pilicifolia": {
+      "species_id": 225,
+      "protein_id": "GWHPABKR000001"
+    },
+    "Platifolius.fixed": {
+      "species_id": 226,
+      "protein_id": "Platifolius.Pl01g00290.1"
+    },
+    "Plunatus": {
+      "species_id": 227,
+      "protein_id": "tig000002340100.1.v1"
+    },
+    "Pmenziesii": {
+      "species_id": 228,
+      "protein_id": "PSME_00001"
+    },
+    "Pmicrantha": {
+      "species_id": 229,
+      "protein_id": "Pmi8161_t"
+    },
+    "Pmume": {
+      "species_id": 230,
+      "protein_id": "Pmume.001280179.1"
+    },
+    "Popruinosa": {
+      "species_id": 231,
+      "protein_id": "Ppr_108330.716"
+    },
+    "Ppatens": {
+      "species_id": 232,
+      "protein_id": "NP_904164.1"
+    },
+    "Ppersica_298_v2.1": {
+      "species_id": 233,
+      "protein_id": "Prupe.I005800.1.p"
+    },
+    "Ppersica": {
+      "species_id": 234,
+      "protein_id": "Pper.007198809.2"
+    },
+    "Ppruinosa": {
+      "species_id": 235,
+      "protein_id": "Phypru00g000180.1"
+    },
+    "Psalicina": {
+      "species_id": 236,
+      "protein_id": "Psal.Chr1.1892"
+    },
+    "Psalicina.sanyueli": {
+      "species_id": 237,
+      "protein_id": "PsSY0024350.1"
+    },
+    "Psomniferum": {
+      "species_id": 238,
+      "protein_id": "XP_026377017.1"
+    },
+    "Pstenoptera": {
+      "species_id": 239,
+      "protein_id": "Ptst_00000.t1"
+    },
+    "Ptaeda": {
+      "species_id": 240,
+      "protein_id": "PITA_00001"
+    },
+    "Ptomentosa": {
+      "species_id": 241,
+      "protein_id": "KAG6735221.1"
+    },
+    "Ptremuloides": {
+      "species_id": 242,
+      "protein_id": "Potrs000001g30245.1"
+    },
+    "Ptrichocarpa_533_v4.1": {
+      "species_id": 243,
+      "protein_id": "Potri.T125208.1.p"
+    },
+    "Ptrichocarpa": {
+      "species_id": 244,
+      "protein_id": "Ptri_002297609.2"
+    },
+    "Ptrifoliata": {
+      "species_id": 245,
+      "protein_id": "Pt1g001820.3"
+    },
+    "Pvirgatum": {
+      "species_id": 246,
+      "protein_id": "Pavir.J683263.1.p"
+    },
+    "Pvulgaris": {
+      "species_id": 247,
+      "protein_id": "Phvul.L001612"
+    },
+    "Rargentea": {
+      "species_id": 248,
+      "protein_id": "XP_030511258.1"
+    },
+    "Rcommunis_119_v0.1": {
+      "species_id": 249,
+      "protein_id": "27371.m000068"
+    },
+    "Rcommunis": {
+      "species_id": 250,
+      "protein_id": "NP_001310615.1"
+    },
+    "Rgriersonianum": {
+      "species_id": 251,
+      "protein_id": "KAG5512612.1"
+    },
+    "Rguianensis": {
+      "species_id": 252,
+      "protein_id": "Rgu000001"
+    },
+    "Rislandica": {
+      "species_id": 253,
+      "protein_id": "Roisl.0043s0007.1.p"
+    },
+    "Rrubrinervis": {
+      "species_id": 254,
+      "protein_id": "KAF3430867.1"
+    },
+    "Rsimsii": {
+      "species_id": 255,
+      "protein_id": "KAF7112153.1"
+    },
+    "Salba": {
+      "species_id": 256,
+      "protein_id": "Sialb.1527s0016.1.p"
+    },
+    "Sangustifolia.fixed": {
+      "species_id": 257,
+      "protein_id": "strangu_011328-RA"
+    },
+    "Sbicolor_730_v5.1": {
+      "species_id": 258,
+      "protein_id": "Sobic.K021732.1.p"
+    },
+    "Sbicolor": {
+      "species_id": 259,
+      "protein_id": "Sobic.010G276200"
+    },
+    "SbicolorRio": {
+      "species_id": 260,
+      "protein_id": "SbRio.08G046900.1.p"
+    },
+    "Sbrachista": {
+      "species_id": 261,
+      "protein_id": "GWHPAAZH000001"
+    },
+    "Schacoense": {
+      "species_id": 262,
+      "protein_id": "g18281.t1"
+    },
+    "Sdunnii": {
+      "species_id": 263,
+      "protein_id": "Sdun9660558.1"
+    },
+    "Sfallax": {
+      "species_id": 264,
+      "protein_id": "Sphfalx18G072800.1.p"
+    },
+    "Sgrosvenorii.fixed": {
+      "species_id": 265,
+      "protein_id": "tig00000000.1_1_ORF1"
+    },
+    "Shermonthica": {
+      "species_id": 266,
+      "protein_id": "CAA0805639.1"
+    },
+    "Shispanica": {
+      "species_id": 267,
+      "protein_id": "XP_047937535.1"
+    },
+    "Sindicum": {
+      "species_id": 268,
+      "protein_id": "NP_001291322.1"
+    },
+    "Sintermedia": {
+      "species_id": 269,
+      "protein_id": "CAA7387634.1"
+    },
+    "Sitalica": {
+      "species_id": 270,
+      "protein_id": "Seita.J031300"
+    },
+    "Slycoperscoides06": {
+      "species_id": 271,
+      "protein_id": "Contig1004g050010.1"
+    },
+    "Slycopersicum": {
+      "species_id": 272,
+      "protein_id": "Solyc00g500001.1.1"
+    },
+    "SMEbrinjal": {
+      "species_id": 273,
+      "protein_id": "Smechr0101930.1"
+    },
+    "Smelongena": {
+      "species_id": 274,
+      "protein_id": "SMEL_000g000120.1.01"
+    },
+    "Smelongena_V4.1": {
+      "species_id": 275,
+      "protein_id": "SMEL4.1_00g000100.1.01"
+    },
+    "Smuscicola": {
+      "species_id": 276,
+      "protein_id": "10000|SM000021S06460"
+    },
+    "Sparvula": {
+      "species_id": 277,
+      "protein_id": "SpUn0903_0020.1"
+    },
+    "Spinnata": {
+      "species_id": 278,
+      "protein_id": "Stapi.7816s0001.1.p"
+    },
+    "Spolyrhiza9509": {
+      "species_id": 279,
+      "protein_id": "Sp9509d001g000010_T001"
+    },
+    "Spurpurea": {
+      "species_id": 280,
+      "protein_id": "Sapur.T097200.1.p"
+    },
+    "Ssonchifolius": {
+      "species_id": 281,
+      "protein_id": "KAI3664297.1"
+    },
+    "Ssplendens": {
+      "species_id": 282,
+      "protein_id": "XP_041989298.1"
+    },
+    "Ssuberectus": {
+      "species_id": 283,
+      "protein_id": "TKY44442.1"
+    },
+    "Ssuchowensis": {
+      "species_id": 284,
+      "protein_id": "Ssuc5219066.1"
+    },
+    "Stora": {
+      "species_id": 285,
+      "protein_id": "Stor7800364.1"
+    },
+    "Stuberosum": {
+      "species_id": 286,
+      "protein_id": "PGSC0003DMT400095664"
+    },
+    "Stuberosum_Hap2": {
+      "species_id": 287,
+      "protein_id": "KAH0736883.1"
+    },
+    "Sviridis": {
+      "species_id": 288,
+      "protein_id": "Sevir.J014300"
+    },
+    "Taestivum_296": {
+      "species_id": 289,
+      "protein_id": "Traes_4AS_1820493B9.2"
+    },
+    "Taestivum_IWGSC": {
+      "species_id": 290,
+      "protein_id": "TraesCS4A02G403700.1"
+    },
+    "Tarvense": {
+      "species_id": 291,
+      "protein_id": "Thlar.0516s0004.1.p"
+    },
+    "Tcacao.fixed": {
+      "species_id": 292,
+      "protein_id": "Tca_XP_007008706.2"
+    },
+    "Tchinensis": {
+      "species_id": 293,
+      "protein_id": "KAH9287426.1"
+    },
+    "Tintermedium_503": {
+      "species_id": 294,
+      "protein_id": "Thint.V0350100.1.p"
+    },
+    "Tpratense_385": {
+      "species_id": 295,
+      "protein_id": "Tp57577_TGAC_v2_gene35485"
+    },
+    "Tspeciosissima": {
+      "species_id": 296,
+      "protein_id": "XP_043687031.1"
+    },
+    "Turartu": {
+      "species_id": 297,
+      "protein_id": "TRIUR3_00001-P1"
+    },
+    "Twilfordii": {
+      "species_id": 298,
+      "protein_id": "XP_038678338.1"
+    },
+    "Vangularis_Gyeongwon": {
+      "species_id": 299,
+      "protein_id": "vigan.Gyeongwon.gnm3.ann1.Vang0002ss00010.1"
+    },
+    "Vangularis_LXD": {
+      "species_id": 300,
+      "protein_id": "LXD2370535.1"
+    },
+    "Vangularis_Shumari": {
+      "species_id": 301,
+      "protein_id": "vigan.Shumari.gnm1.ann1.Vigan.01G000100.01"
+    },
+    "Vdarrowii": {
+      "species_id": 302,
+      "protein_id": "KAH7832795.1"
+    },
+    "Vplanifolia": {
+      "species_id": 303,
+      "protein_id": "KAG0445770.1"
+    },
+    "Vradiata": {
+      "species_id": 304,
+      "protein_id": "vigra.VC1973A.gnm6.ann1.Vradi07g06290.1"
+    },
+    "Vriparia": {
+      "species_id": 305,
+      "protein_id": "XP_034672316.1"
+    },
+    "Vunguiculata_540_v1.2": {
+      "species_id": 306,
+      "protein_id": "VigunL028202.1.p"
+    },
+    "Vunguiculata_469": {
+      "species_id": 307,
+      "protein_id": "VigunL081000.1.p"
+    },
+    "Vunguiculata_CB5": {
+      "species_id": 308,
+      "protein_id": "VuCB5-2.L030600.1.p"
+    },
+    "Vvinifera": {
+      "species_id": 309,
+      "protein_id": "VIT_212s0142g00590.1"
+    },
+    "Waustraliana8730": {
+      "species_id": 310,
+      "protein_id": "Wa8730c001g000010_T001"
+    },
+    "Zjujuba": {
+      "species_id": 311,
+      "protein_id": "NP_001310781.1"
+    },
+    "Zmarina": {
+      "species_id": 312,
+      "protein_id": "KMZ55901.1"
+    },
+    "Zmays_493_RefGen_V4": {
+      "species_id": 313,
+      "protein_id": "Zm00001d000434_P001"
+    },
+    "Zofficinale": {
+      "species_id": 314,
+      "protein_id": "XP_042373031.1"
+    }
+  },
+  "missing_meta": [],
+  "empty_meta": []
+}

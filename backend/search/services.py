@@ -1,6 +1,10 @@
+import json
 import math
+from pathlib import Path
 
 import numpy as np
+
+from django.conf import settings
 
 from api.models import SpeciesInfo
 
@@ -34,6 +38,12 @@ DIM = 512
 #
 # 对 512 维 float32 向量，一般 5000~20000 都可以。
 TARGET_CHUNK_SIZE = 10000
+
+_EXAMPLE_PROTEIN_CACHE = {
+    "path": None,
+    "mtime": None,
+    "data": None,
+}
 
 
 # ============================================================
@@ -266,6 +276,134 @@ def get_query_embedding(protein_id, query_species_name=None):
     }
 
 
+def _normalize_example_record(species_name, record):
+    if not isinstance(record, dict):
+        return None
+
+    protein_id = record.get("protein_id")
+    if not protein_id:
+        return None
+
+    species_id = record.get("species_id")
+
+    return {
+        "species_id": species_id,
+        "species_name": record.get("species_name") or species_name,
+        "protein_id": str(protein_id),
+    }
+
+
+def load_example_protein_index():
+    json_path = getattr(settings, "PROTEIN_EXAMPLE_JSON_PATH", None)
+
+    if not json_path:
+        raise SearchInputError(
+            "PROTEIN_EXAMPLE_JSON_PATH is not configured."
+        )
+
+    json_path = Path(json_path)
+
+    if not json_path.exists():
+        raise SearchInputError(
+            "Protein example JSON file not found.",
+            {
+                "path": str(json_path),
+            },
+        )
+
+    mtime = json_path.stat().st_mtime
+
+    if (
+        _EXAMPLE_PROTEIN_CACHE["path"] == str(json_path)
+        and _EXAMPLE_PROTEIN_CACHE["mtime"] == mtime
+        and _EXAMPLE_PROTEIN_CACHE["data"] is not None
+    ):
+        return _EXAMPLE_PROTEIN_CACHE["data"]
+
+    try:
+        with json_path.open("r", encoding="utf-8") as f:
+            payload = json.load(f)
+    except json.JSONDecodeError as exc:
+        raise SearchInputError(
+            "Protein example JSON file is invalid.",
+            {
+                "path": str(json_path),
+            },
+        ) from exc
+
+    by_species_id = {}
+    by_species_name = {}
+
+    raw_data = payload.get("data", payload)
+
+    if isinstance(payload.get("by_species_id"), dict):
+        for species_id, record in payload["by_species_id"].items():
+            normalized = _normalize_example_record(
+                record.get("species_name") or "",
+                {
+                    **record,
+                    "species_id": record.get("species_id", species_id),
+                },
+            )
+            if normalized:
+                by_species_id[str(species_id)] = normalized
+
+    if isinstance(raw_data, dict):
+        for species_name, record in raw_data.items():
+            normalized = _normalize_example_record(species_name, record)
+            if not normalized:
+                continue
+
+            by_species_name[species_name] = normalized
+
+            if normalized["species_id"] is not None:
+                by_species_id[str(normalized["species_id"])] = normalized
+
+    data = {
+        "by_species_id": by_species_id,
+        "by_species_name": by_species_name,
+    }
+
+    _EXAMPLE_PROTEIN_CACHE.update({
+        "path": str(json_path),
+        "mtime": mtime,
+        "data": data,
+    })
+
+    return data
+
+
+def get_example_protein(conservatory_genome_name):
+    """
+    Return one deterministic example protein for the selected genome.
+    """
+
+    species = get_species(conservatory_genome_name)
+
+    example_index = load_example_protein_index()
+    example = (
+        example_index["by_species_id"].get(str(species["id"]))
+        or example_index["by_species_name"].get(species["conservatory_genome_name"])
+    )
+
+    if not example:
+        raise SearchInputError(
+            "No example protein found for species.",
+            {
+                "query_species": conservatory_genome_name,
+                "species_id": species["id"],
+            },
+        )
+
+    return {
+        "species_id": species["id"],
+        "species": species["species"],
+        "genome_version": species["genome_version"],
+        "conservatory_genome_name": species["conservatory_genome_name"],
+        "protein_id": example["protein_id"],
+    }
+
+
 # ============================================================
 # 相似度范围检查：只返回正相似度
 # ============================================================
@@ -456,6 +594,7 @@ def protein_embedding_search(
         # 如果正交，score 接近 0。
         # 如果方向不相似，score 会接近或小于 0，后面会被过滤掉。
         scores = matrix @ query["embedding"]
+        scores = np.clip(scores, -1.0, 1.0)
 
         # 把当前 chunk 的结果追加到 scored_rows。
         # scored_rows 是完整搜索结果的临时内存表。
