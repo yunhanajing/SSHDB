@@ -7,7 +7,7 @@
           <h1>SSHDB</h1>
           <p>
             A specialized database for symbiotic nitrogen fixation (SNF) protein homologs across species. It integrates sequence and structure-based homology
-            search results from more than 300 organisms, providing sequence similarity, structural similarity, sequence alignment, and structural alignment information.
+            search results from more than 270 organisms, providing sequence similarity, structural similarity, sequence alignment, and structural alignment information.
             SSHDB aims to support evolutionary analysis and engineering research of SNF in non-leguminous crops.
           </p>
 
@@ -102,6 +102,11 @@
             v-for="species in speciesList1"
             :key="species.scientificName"
             class="species-card"
+            role="link"
+            tabindex="0"
+            @click="goToSpeciesSearch(species.scientificName)"
+            @keydown.enter="goToSpeciesSearch(species.scientificName)"
+            @keydown.space.prevent="goToSpeciesSearch(species.scientificName)"
           >
             <img :src="species.image" :alt="species.scientificName" />
             <div>
@@ -127,6 +132,11 @@
             v-for="species in speciesList2"
             :key="species.scientificName"
             class="species-card"
+            role="link"
+            tabindex="0"
+            @click="goToSpeciesSearch(species.scientificName)"
+            @keydown.enter="goToSpeciesSearch(species.scientificName)"
+            @keydown.space.prevent="goToSpeciesSearch(species.scientificName)"
           >
             <img :src="species.image" :alt="species.scientificName" />
             <div>
@@ -148,6 +158,11 @@
             v-for="feature in features"
             :key="feature.title"
             class="feature-card"
+            role="link"
+            tabindex="0"
+            @click="goToFeature(feature.route)"
+            @keydown.enter="goToFeature(feature.route)"
+            @keydown.space.prevent="goToFeature(feature.route)"
           >
             <div class="feature-image-wrap">
               <img class="feature-image" :src="feature.image" :alt="feature.title" />
@@ -207,19 +222,19 @@ const speciesTrack2 = ref(null)
 const topStatistics = [
   {
     label: 'Organisms',
-    value: '279',
+    value: '270 +',   //'279'
     unit: 'species',
     image: '/image/1.png'
   },
   {
     label: 'Taxonomic Families',
-    value: '66',
+    value: '60 +',  //'66'
     unit: 'families',
     image: '/image/17.png'
   },
   {
     label: 'SNF-related Genes',
-    value: '248',
+    value: '240 +',  //'248'
     unit: 'genes',
     image: '/image/2.png'
   }
@@ -228,19 +243,19 @@ const topStatistics = [
 const bottomStatistics = [
   {
     label: 'Remote Homologs ',
-    value: '1,128,711',
+    value: '1.1M +',  //'1,128,711',
     unit: '< 30% identity',
     image: '/image/13.png'
   },
   {
     label: 'Intermediate Homologs',
-    value: '826,970',
+    value: '820K +',  //826,970
     unit: '30% - 50% identity',
     image: '/image/14.png'
   },
   {
     label: 'Close Homologs ',
-    value: '709,144',
+    value: '700K +',// 709,144
     unit: '> 50% identity',
     image: '/image/15.png'
   }
@@ -361,22 +376,26 @@ const features = [
   {
     title: 'Sequence Similarity',
     description: 'Explore proteins with similar sequences across species.',
-    image: '/image/5.png'
+    image: '/image/5.png',
+    route: '/search'
   },
   {
     title: 'Structural Similarity',
     description: 'Explore proteins with similar structures across species.',
-    image: '/image/6.png'
+    image: '/image/6.png',
+    route: '/search'
   },
   {
     title: 'Sequence Alignment',
     description: 'View and download multiple sequence alignments.',
-    image: '/image/7.png'
+    image: '/image/7.png',
+    route: '/sequence-alignment'
   },
   {
     title: 'Structural Alignment',
     description: 'Visualize and analyze structural alignments.',
-    image: '/image/8.png'
+    image: '/image/8.png',
+    route: '/structure-alignment'
   }
 ]
 
@@ -408,6 +427,21 @@ function handleSearch() {
       type: searchType.value,
       keyword: query
     }
+  })
+}
+
+function goToFeature(route) {
+  if (!route) return
+
+  router.push(route)
+}
+
+function goToSpeciesSearch(species) {
+  if (!species) return
+
+  router.push({
+    path: '/search',
+    query: { species }
   })
 }
 
@@ -829,6 +863,16 @@ function scrollSpecies(direction, trackName) {
   border-radius: 10px;
   scroll-snap-align: start;
   align-items: center;
+  cursor: pointer;
+  transition: background 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+}
+
+.species-card:hover,
+.species-card:focus {
+  background: #f7fbff;
+  box-shadow: inset 0 0 0 1px #cfe4f8;
+  outline: none;
+  transform: translateY(-1px);
 }
 
 .species-card > div {
@@ -889,10 +933,20 @@ function scrollSpecies(direction, trackName) {
   gap: 14px;
   background: #fff;
   border-right: 1px solid var(--line);
+  cursor: pointer;
+  transition: background 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
 }
 
 .feature-card:last-child {
   border-right: none;
+}
+
+.feature-card:hover,
+.feature-card:focus {
+  background: #f7fbff;
+  box-shadow: inset 0 0 0 1px #cfe4f8;
+  outline: none;
+  transform: translateY(-1px);
 }
 
 .feature-image-wrap {

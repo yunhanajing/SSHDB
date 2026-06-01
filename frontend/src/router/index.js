@@ -9,9 +9,9 @@ const SequenceAlignment = () => import('../views/SequenceAlignment.vue')
 const StructureAlignment = () => import('../views/StructureAlignment.vue')
 const StructureCandidateSearch = () => import('../views/StructureCandidateSearch.vue')
 const JBrowse = () => import('../views/JBrowse.vue')
+const Download = () => import('../views/Download.vue')
 
 const About = () => import('../views/About.vue')
-const Help = () => import('../views/Help.vue')
 
 const routes = [
   {
@@ -57,9 +57,13 @@ const routes = [
     component: StructureCandidateSearch
   },
   {
-    path: '/help',
-    name: 'help',
-    component: Help
+    path: '/download',
+    name: 'download',
+    component: Download
+  },
+  {
+    path: '/test',
+    redirect: '/download'
   },
   {
     path: '/about',

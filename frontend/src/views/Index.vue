@@ -271,11 +271,13 @@
 
 <script setup>
 import { reactive, ref, onMounted, computed, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { QuestionFilled, Search, Download } from '@element-plus/icons-vue'
 import request from '@/utils/request'
 
 const formRef = ref()
+const route = useRoute()
 
 const DEFAULT_GENE = 'ACP'
 const DEFAULT_SPECIES = 'Arabidopsis thaliana'
@@ -424,6 +426,33 @@ const handleSpeciesChange = species => {
     form.conservatory_genome_name =
       genomeVersionOptions.value[0].conservatory_genome_name
   }
+}
+
+const selectSpeciesFromRoute = () => {
+  const routeSpecies = Array.isArray(route.query.species)
+    ? route.query.species[0]
+    : route.query.species
+
+  if (!routeSpecies) return false
+
+  const matchedSpecies = speciesOptions.value.find(
+    item => item.toLowerCase() === String(routeSpecies).toLowerCase()
+  )
+
+  if (!matchedSpecies) {
+    ElMessage.warning(`Species "${routeSpecies}" not found`)
+    return false
+  }
+
+  form.species = matchedSpecies
+  handleSpeciesChange(matchedSpecies)
+
+  if (!form.conservatory_genome_name && genomeVersionOptions.value.length) {
+    form.conservatory_genome_name =
+      genomeVersionOptions.value[0].conservatory_genome_name
+  }
+
+  return true
 }
 
 const handleSpeciesClear = () => {
@@ -591,6 +620,7 @@ onMounted(async () => {
   ])
 
   const geneExists = geneOptions.value.some(item => item.value === DEFAULT_GENE)
+  const routeSpeciesSelected = selectSpeciesFromRoute()
   const speciesExists = speciesOptions.value.includes(DEFAULT_SPECIES)
 
   if (!geneExists) {
@@ -598,7 +628,9 @@ onMounted(async () => {
     ElMessage.warning(`Default gene "${DEFAULT_GENE}" not found`)
   }
 
-  if (!speciesExists) {
+  if (routeSpeciesSelected) {
+    // Species and genome version have already been initialized from the route.
+  } else if (!speciesExists) {
     form.species = ''
     form.conservatory_genome_name = ''
     genomeVersionOptions.value = []

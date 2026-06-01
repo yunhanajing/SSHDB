@@ -30,18 +30,21 @@
 
           <!-- Search 二级菜单 -->
           <el-sub-menu index="/search-menu">
+        
             <template #title>Search</template>
 
-            <el-menu-item index="/search">
-              Search SNF structure
+            <el-menu-item index="/gene-info">
+            SNF Protein Retrieval
             </el-menu-item>
-
+            <el-menu-item index="/search">
+              SNF Homolog Search Across Species
+            </el-menu-item>
             <el-menu-item index="/structure-candidate-search">
-              Search structure candidate proteins
+             Custom Protein Homolog Search
             </el-menu-item>
           </el-sub-menu>
 
-          <el-menu-item index="/gene-info">Gene</el-menu-item>
+          <!-- <el-menu-item index="/gene-info">Gene</el-menu-item> -->
 
           <!-- Tools 二级菜单 -->
           <el-sub-menu index="/tools">
@@ -60,7 +63,7 @@
             </el-menu-item>
           </el-sub-menu>
 
-          <el-menu-item index="/test">Download</el-menu-item>
+          <el-menu-item index="/download">Download</el-menu-item>
 
           <el-menu-item index="/about">About</el-menu-item>
         </el-menu>
@@ -115,6 +118,10 @@ const activeMenu = computed(() => {
     path === '/structure-alignment'
   ) {
     return '/tools'
+  }
+
+  if (path === '/test') {
+    return '/download'
   }
 
   return path

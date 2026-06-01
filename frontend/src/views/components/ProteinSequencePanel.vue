@@ -548,8 +548,8 @@ const handleDownloadCif = () => {
 
 .structure-panel {
   margin-top: 28px;
-  min-height: 620px;
-  padding: 88px 28px 28px;
+  min-height: 662px;
+  padding: 74px 28px 28px;
 }
 
 .sequence-panel {
@@ -584,17 +584,17 @@ const handleDownloadCif = () => {
 
 .structure-inner {
   width: 100%;
-  min-height: 500px;
+  min-height: 560px;
   display: grid;
-  grid-template-columns: 560px minmax(0, 1fr);
+  grid-template-columns: 640px minmax(0, 1fr);
   gap: 28px;
   align-items: start;
 }
 
 .structure-viewer-card {
   position: relative;
-  width: 560px;
-  height: 500px;
+  width: 640px;
+  height: 560px;
   border: 1px solid #e4e7ed;
   border-radius: 6px;
   background: #ffffff;
@@ -695,13 +695,15 @@ const handleDownloadCif = () => {
 
 .structure-meta {
   width: 100%;
-  min-height: 500px;
+  min-height: 560px;
   box-sizing: border-box;
 }
 
 .structure-confidence-panel {
   width: 100%;
-  min-height: 500px;
+  min-height: 560px;
+  display: flex;
+  flex-direction: column;
   padding: 22px 28px 20px;
   border: 1px solid #e0e6ef;
   border-radius: 8px;
@@ -766,7 +768,7 @@ const handleDownloadCif = () => {
 }
 
 .plddt-bar {
-  width: min(78%, 320px);
+  width: min(58%, 220px);
   height: 12px;
   border-radius: 999px;
   justify-self: center;
@@ -776,7 +778,8 @@ const handleDownloadCif = () => {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 22px;
-  margin-top: 35px;
+  margin-top: auto;
+  padding-top: 44px;
 }
 
 .confidence-score-card {
