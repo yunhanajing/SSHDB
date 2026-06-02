@@ -3,6 +3,7 @@ from django.shortcuts import render
 from pathlib import Path
 from urllib.parse import quote
 from django.conf import settings
+from django.db import DatabaseError
 from django.db.models import Q
 from django.http import FileResponse
 from rest_framework.response import Response
@@ -16,7 +17,9 @@ from .models import SearchResult
 from .models import ProteinInfo
 
 import json
+import mimetypes
 import re
+from datetime import datetime
 
 CIF_SPECIES_PREFIXES = {
     "glycine max": "gm",
@@ -31,6 +34,42 @@ CIF_PROTEIN_PREFIXES = {
     "medtr": "mt",
     "phvul": "pv",
 }
+
+GENOME_RESOURCE_SUFFIXES = {
+    "genome": [
+        ".fasta",
+        ".fasta.gz",
+        ".fa",
+        ".fa.gz",
+        ".fna",
+        ".fna.gz",
+    ],
+    "gff": [
+        ".genes.sorted.gff3",
+        ".genes.sorted.gff3.gz",
+        ".genes.fixed_gene.sorted.gff3",
+        ".genes.fixed_gene.sorted.gff3.gz",
+        ".gff3",
+        ".gff3.gz",
+    ],
+}
+
+GENOME_RESOURCE_TYPES = {
+    "genome": "genome",
+    "fasta": "genome",
+    "fa": "genome",
+    "fna": "genome",
+    "gff": "gff",
+    "gff3": "gff",
+}
+
+NPY_RESOURCE_SUFFIX_TYPES = {
+    "_meta.npy": "Protein ID",
+    "_db.npy": "Vector",
+}
+
+HOMOLOGY_RESOURCE_SUFFIX = ".tmvec"
+HOMOLOGY_RESOURCE_TYPE = "results"
 
 
 def _normalize_cif_gene(value, species_prefix):
@@ -48,6 +87,385 @@ def _normalize_cif_protein_id(value):
 
 def _get_cif_file_url(protein_id):
     return f"/api/protein/cif/?protein_id={quote(str(protein_id or '').strip())}"
+
+
+def _normalize_genome_resource_type(value):
+    return GENOME_RESOURCE_TYPES.get(str(value or "").strip().lower())
+
+
+def _get_genome_file_root():
+    return Path(
+        getattr(settings, "GENOME_FILE_ROOT", settings.BASE_DIR.parent / "genome")
+    )
+
+
+def _is_safe_genome_name(value):
+    return bool(re.fullmatch(r"[A-Za-z0-9_.-]+", str(value or "")))
+
+
+def _get_genome_resource_candidates(conservatory_genome_name, resource_type):
+    suffixes = GENOME_RESOURCE_SUFFIXES.get(resource_type, [])
+    return [
+        f"{conservatory_genome_name}{suffix}"
+        for suffix in suffixes
+    ]
+
+
+def _get_content_type(file_path):
+    content_type, encoding = mimetypes.guess_type(file_path.name)
+
+    if encoding == "gzip":
+        return "application/gzip"
+
+    return content_type or "application/octet-stream"
+
+
+def _format_file_size(bytes_count):
+    if not bytes_count:
+        return "0 B"
+
+    units = ["B", "KB", "MB", "GB", "TB"]
+    size = float(bytes_count)
+    unit_index = 0
+
+    while size >= 1024 and unit_index < len(units) - 1:
+        size /= 1024
+        unit_index += 1
+
+    precision = 0 if size >= 10 or unit_index == 0 else 1
+    return f"{size:.{precision}f} {units[unit_index]}"
+
+
+def _get_genome_resource_type_from_filename(filename):
+    for resource_type, suffixes in GENOME_RESOURCE_SUFFIXES.items():
+        for suffix in suffixes:
+            if filename.endswith(suffix):
+                return resource_type
+
+    return None
+
+
+def _strip_genome_resource_suffix(filename, resource_type):
+    for suffix in GENOME_RESOURCE_SUFFIXES.get(resource_type, []):
+        if filename.endswith(suffix):
+            return filename[:-len(suffix)]
+
+    return Path(filename).stem
+
+
+def _is_safe_genome_filename(value):
+    return bool(re.fullmatch(r"[A-Za-z0-9_.-]+", str(value or "")))
+
+
+def _get_genome_metadata_lookup():
+    try:
+        rows = SpeciesInfo.objects.values(
+            "species",
+            "genome_version",
+            "conservatory_genome_name",
+        )
+        return {
+            item["conservatory_genome_name"]: {
+                "species": item["species"] or "",
+                "genome_version": item["genome_version"] or "",
+            }
+            for item in rows
+            if item["conservatory_genome_name"]
+        }
+    except DatabaseError:
+        return {}
+
+
+def _get_genome_file_url(filename):
+    return f"/api/genome/file/?filename={quote(str(filename or '').strip())}"
+
+
+def list_genome_resource_files():
+    genome_file_root = _get_genome_file_root().resolve()
+    metadata_lookup = _get_genome_metadata_lookup()
+
+    if not genome_file_root.is_dir():
+        return []
+
+    rows = []
+
+    for file_path in sorted(genome_file_root.iterdir(), key=lambda item: item.name.lower()):
+        if not file_path.is_file():
+            continue
+
+        filename = file_path.name
+        resource_type = _get_genome_resource_type_from_filename(filename)
+
+        if not resource_type:
+            continue
+
+        conservatory_genome_name = _strip_genome_resource_suffix(filename, resource_type)
+        metadata = metadata_lookup.get(conservatory_genome_name, {})
+        file_stat = file_path.stat()
+
+        rows.append({
+            "species": metadata.get("species", ""),
+            "genome_version": metadata.get("genome_version", conservatory_genome_name),
+            "conservatory_genome_name": conservatory_genome_name,
+            "type": "Genome" if resource_type == "genome" else "GFF",
+            "format": "FASTA" if resource_type == "genome" else "GFF3",
+            "bytes": file_stat.st_size,
+            "sizeLabel": _format_file_size(file_stat.st_size),
+            "updatedAt": datetime.fromtimestamp(file_stat.st_mtime).strftime("%Y-%m-%d"),
+            "filename": filename,
+            "url": _get_genome_file_url(filename),
+        })
+
+    return rows
+
+
+def _get_npy_file_root():
+    return Path(getattr(settings, "PROTEIN_NPY_ROOT", settings.BASE_DIR.parent / "npy"))
+
+
+def _is_safe_npy_filename(value):
+    return bool(re.fullmatch(r"[A-Za-z0-9_.-]+\.npy", str(value or "")))
+
+
+def _get_npy_resource_type_from_filename(filename):
+    for suffix, resource_type in NPY_RESOURCE_SUFFIX_TYPES.items():
+        if filename.endswith(suffix):
+            return resource_type
+
+    return None
+
+
+def _strip_npy_resource_suffix(filename):
+    for suffix in NPY_RESOURCE_SUFFIX_TYPES:
+        if filename.endswith(suffix):
+            return filename[:-len(suffix)]
+
+    return Path(filename).stem
+
+
+def _get_npy_download_url(filename):
+    return f"/api/npy/file/?filename={quote(str(filename or '').strip())}"
+
+
+def list_npy_resource_files():
+    npy_root = _get_npy_file_root().resolve()
+    metadata_lookup = _get_genome_metadata_lookup()
+
+    if not npy_root.is_dir():
+        return []
+
+    rows = []
+
+    for file_path in sorted(npy_root.glob("*.npy"), key=lambda item: item.name.lower()):
+        if not file_path.is_file():
+            continue
+
+        filename = file_path.name
+        resource_type = _get_npy_resource_type_from_filename(filename)
+
+        if not resource_type:
+            continue
+
+        conservatory_genome_name = _strip_npy_resource_suffix(filename)
+        metadata = metadata_lookup.get(conservatory_genome_name, {})
+        file_stat = file_path.stat()
+
+        rows.append({
+            "species": metadata.get("species", ""),
+            "genome_version": metadata.get("genome_version", conservatory_genome_name),
+            "conservatory_genome_name": conservatory_genome_name,
+            "type": resource_type,
+            "bytes": file_stat.st_size,
+            "sizeLabel": _format_file_size(file_stat.st_size),
+            "updatedAt": datetime.fromtimestamp(file_stat.st_mtime).strftime("%Y-%m-%d"),
+            "filename": filename,
+            "url": _get_npy_download_url(filename),
+        })
+
+    return rows
+
+
+def _get_homology_file_root():
+    return Path(
+        getattr(settings, "PROTEIN_HOMOLOGY_ROOT", settings.BASE_DIR.parent / "tmvec")
+    )
+
+
+def _is_safe_homology_filename(value):
+    return bool(re.fullmatch(r"[A-Za-z0-9_.-]+\.tmvec", str(value or "")))
+
+
+def _strip_homology_resource_suffix(filename):
+    if filename.endswith(HOMOLOGY_RESOURCE_SUFFIX):
+        return filename[:-len(HOMOLOGY_RESOURCE_SUFFIX)]
+
+    return Path(filename).stem
+
+
+def _get_homology_download_url(filename):
+    return f"/api/homology/file/?filename={quote(str(filename or '').strip())}"
+
+
+def list_homology_resource_files():
+    homology_root = _get_homology_file_root().resolve()
+    metadata_lookup = _get_genome_metadata_lookup()
+
+    if not homology_root.is_dir():
+        return []
+
+    rows = []
+
+    for file_path in sorted(homology_root.glob(f"*{HOMOLOGY_RESOURCE_SUFFIX}"), key=lambda item: item.name.lower()):
+        if not file_path.is_file():
+            continue
+
+        filename = file_path.name
+        conservatory_genome_name = _strip_homology_resource_suffix(filename)
+        metadata = metadata_lookup.get(conservatory_genome_name, {})
+        file_stat = file_path.stat()
+
+        rows.append({
+            "species": metadata.get("species", ""),
+            "genome_version": metadata.get("genome_version", conservatory_genome_name),
+            "conservatory_genome_name": conservatory_genome_name,
+            "type": HOMOLOGY_RESOURCE_TYPE,
+            "bytes": file_stat.st_size,
+            "sizeLabel": _format_file_size(file_stat.st_size),
+            "updatedAt": datetime.fromtimestamp(file_stat.st_mtime).strftime("%Y-%m-%d"),
+            "filename": filename,
+            "url": _get_homology_download_url(filename),
+        })
+
+    return rows
+
+
+def _get_snf_file_path():
+    return Path(
+        getattr(
+            settings,
+            "SNF_RELATED_GENE_FILE",
+            settings.BASE_DIR.parent / "output_protein_data_with_domain.csv",
+        )
+    )
+
+
+def _get_snf_download_url():
+    return "/api/snf/file/"
+
+
+def list_snf_resource_files():
+    snf_file = _get_snf_file_path().resolve()
+
+    if not snf_file.is_file():
+        return []
+
+    file_stat = snf_file.stat()
+
+    return [{
+        "bytes": file_stat.st_size,
+        "sizeLabel": _format_file_size(file_stat.st_size),
+        "updatedAt": datetime.fromtimestamp(file_stat.st_mtime).strftime("%Y-%m-%d"),
+        "filename": snf_file.name,
+        "url": _get_snf_download_url(),
+    }]
+
+
+def _get_cif_file_root():
+    return Path(getattr(settings, "PROTEIN_CIF_ROOT", settings.BASE_DIR.parent / "cif"))
+
+
+def _is_safe_cif_filename(value):
+    return bool(re.fullmatch(r"[A-Za-z0-9_.-]+\.cif", str(value or "")))
+
+
+def _get_cif_protein_id_from_filename(filename):
+    stem = filename[:-len(".cif")] if filename.endswith(".cif") else Path(filename).stem
+
+    if "__" in stem:
+        stem = stem.split("__", 1)[1]
+
+    if stem.endswith("_model"):
+        stem = stem[:-len("_model")]
+
+    return stem
+
+
+def _get_cif_download_url(filename):
+    return f"/api/protein/cif/?filename={quote(str(filename or '').strip())}"
+
+
+def list_cif_resource_files():
+    cif_root = _get_cif_file_root().resolve()
+
+    if not cif_root.is_dir():
+        return []
+
+    rows = []
+
+    for file_path in sorted(cif_root.glob("*.cif"), key=lambda item: item.name.lower()):
+        if not file_path.is_file():
+            continue
+
+        file_stat = file_path.stat()
+
+        rows.append({
+            "protein_id": _get_cif_protein_id_from_filename(file_path.name),
+            "filename": file_path.name,
+            "bytes": file_stat.st_size,
+            "sizeLabel": _format_file_size(file_stat.st_size),
+            "updatedAt": datetime.fromtimestamp(file_stat.st_mtime).strftime("%Y-%m-%d"),
+            "format": "CIF",
+            "url": _get_cif_download_url(file_path.name),
+        })
+
+    return rows
+
+
+def get_genome_resource_file_info(conservatory_genome_name, file_type):
+    resource_type = _normalize_genome_resource_type(file_type)
+    genome_file_root = _get_genome_file_root().resolve()
+
+    if not resource_type:
+        return {
+            "status": "invalid_type",
+            "message": "Invalid file type",
+            "root": str(genome_file_root),
+            "candidates": [],
+        }
+
+    candidates = _get_genome_resource_candidates(
+        conservatory_genome_name,
+        resource_type
+    )
+
+    for filename in candidates:
+        candidate_path = (genome_file_root / filename).resolve()
+
+        try:
+            candidate_path.relative_to(genome_file_root)
+        except ValueError:
+            continue
+
+        if candidate_path.is_file():
+            return {
+                "status": "found",
+                "message": "success",
+                "resource_type": resource_type,
+                "filename": candidate_path.name,
+                "path": str(candidate_path),
+                "root": str(genome_file_root),
+                "candidates": candidates,
+            }
+
+    return {
+        "status": "not_found",
+        "message": "Genome resource file not found",
+        "resource_type": resource_type,
+        "filename": None,
+        "path": None,
+        "root": str(genome_file_root),
+        "candidates": candidates,
+    }
 
 
 def _get_cif_species_prefix(organism, protein_id):
@@ -479,8 +897,263 @@ class ProteinSequenceAPIView(APIView):
         })
 
 
+class GenomeResourceFileAPIView(APIView):
+    def get(self, request):
+        filename = request.GET.get('filename', '').strip()
+
+        if filename:
+            if not _is_safe_genome_filename(filename):
+                return Response({
+                    'message': 'Invalid filename'
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+            resource_type = _get_genome_resource_type_from_filename(filename)
+
+            if not resource_type:
+                return Response({
+                    'message': 'Invalid genome resource filename'
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+            genome_file_root = _get_genome_file_root().resolve()
+            file_path = (genome_file_root / filename).resolve()
+
+            try:
+                file_path.relative_to(genome_file_root)
+            except ValueError:
+                return Response({
+                    'message': 'Invalid genome resource path'
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+            if not file_path.is_file():
+                return Response({
+                    'message': 'Genome resource file not found'
+                }, status=status.HTTP_404_NOT_FOUND)
+
+            return FileResponse(
+                file_path.open("rb"),
+                as_attachment=True,
+                filename=file_path.name,
+                content_type=_get_content_type(file_path)
+            )
+
+        conservatory_genome_name = request.GET.get(
+            'conservatory_genome_name',
+            ''
+        ).strip()
+        file_type = request.GET.get('file_type', '').strip()
+
+        if not conservatory_genome_name:
+            return Response({
+                'message': 'Missing conservatory_genome_name'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        if not _is_safe_genome_name(conservatory_genome_name):
+            return Response({
+                'message': 'Invalid conservatory_genome_name'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        genome_file = get_genome_resource_file_info(
+            conservatory_genome_name,
+            file_type
+        )
+
+        if genome_file["status"] == "invalid_type":
+            return Response({
+                'message': genome_file["message"],
+                'valid_file_types': ['genome', 'fasta', 'gff', 'gff3'],
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        if genome_file["status"] != "found" or not genome_file["path"]:
+            return Response({
+                'message': genome_file["message"],
+                'genome_file': genome_file,
+            }, status=status.HTTP_404_NOT_FOUND)
+
+        file_path = Path(genome_file["path"])
+
+        return FileResponse(
+            file_path.open("rb"),
+            as_attachment=True,
+            filename=file_path.name,
+            content_type=_get_content_type(file_path)
+        )
+
+
+class GenomeResourceListAPIView(APIView):
+    def get(self, request):
+        return Response({
+            "code": 200,
+            "message": "success",
+            "data": list_genome_resource_files()
+        }, status=status.HTTP_200_OK)
+
+
+class NpyResourceListAPIView(APIView):
+    def get(self, request):
+        return Response({
+            "code": 200,
+            "message": "success",
+            "data": list_npy_resource_files()
+        }, status=status.HTTP_200_OK)
+
+
+class NpyResourceFileAPIView(APIView):
+    def get(self, request):
+        filename = request.GET.get('filename', '').strip()
+
+        if not filename:
+            return Response({
+                'message': 'Missing filename'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        if not _is_safe_npy_filename(filename):
+            return Response({
+                'message': 'Invalid NPY filename'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        resource_type = _get_npy_resource_type_from_filename(filename)
+
+        if not resource_type:
+            return Response({
+                'message': 'Invalid NPY filename'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        npy_root = _get_npy_file_root().resolve()
+        npy_path = (npy_root / filename).resolve()
+
+        try:
+            npy_path.relative_to(npy_root)
+        except ValueError:
+            return Response({
+                'message': 'Invalid NPY file path'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        if not npy_path.is_file():
+            return Response({
+                'message': 'NPY file not found'
+            }, status=status.HTTP_404_NOT_FOUND)
+
+        return FileResponse(
+            npy_path.open("rb"),
+            as_attachment=True,
+            filename=npy_path.name,
+            content_type="application/octet-stream"
+        )
+
+
+class HomologyResourceListAPIView(APIView):
+    def get(self, request):
+        return Response({
+            "code": 200,
+            "message": "success",
+            "data": list_homology_resource_files()
+        }, status=status.HTTP_200_OK)
+
+
+class HomologyResourceFileAPIView(APIView):
+    def get(self, request):
+        filename = request.GET.get('filename', '').strip()
+
+        if not filename:
+            return Response({
+                'message': 'Missing filename'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        if not _is_safe_homology_filename(filename):
+            return Response({
+                'message': 'Invalid homology filename'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        homology_root = _get_homology_file_root().resolve()
+        homology_path = (homology_root / filename).resolve()
+
+        try:
+            homology_path.relative_to(homology_root)
+        except ValueError:
+            return Response({
+                'message': 'Invalid homology file path'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        if not homology_path.is_file():
+            return Response({
+                'message': 'Homology result file not found'
+            }, status=status.HTTP_404_NOT_FOUND)
+
+        return FileResponse(
+            homology_path.open("rb"),
+            as_attachment=True,
+            filename=homology_path.name,
+            content_type="application/octet-stream"
+        )
+
+
+class SnfResourceListAPIView(APIView):
+    def get(self, request):
+        return Response({
+            "code": 200,
+            "message": "success",
+            "data": list_snf_resource_files()
+        }, status=status.HTTP_200_OK)
+
+
+class SnfResourceFileAPIView(APIView):
+    def get(self, request):
+        snf_file = _get_snf_file_path().resolve()
+
+        if not snf_file.is_file():
+            return Response({
+                'message': 'SNF-related gene file not found'
+            }, status=status.HTTP_404_NOT_FOUND)
+
+        return FileResponse(
+            snf_file.open("rb"),
+            as_attachment=True,
+            filename=snf_file.name,
+            content_type=_get_content_type(snf_file)
+        )
+
+
+class ProteinCifFileListAPIView(APIView):
+    def get(self, request):
+        return Response({
+            "code": 200,
+            "message": "success",
+            "data": list_cif_resource_files()
+        }, status=status.HTTP_200_OK)
+
+
 class ProteinCifFileAPIView(APIView):
     def get(self, request):
+        filename = request.GET.get('filename', '').strip()
+
+        if filename:
+            if not _is_safe_cif_filename(filename):
+                return Response({
+                    'message': 'Invalid CIF filename'
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+            cif_root = _get_cif_file_root().resolve()
+            cif_path = (cif_root / filename).resolve()
+
+            try:
+                cif_path.relative_to(cif_root)
+            except ValueError:
+                return Response({
+                    'message': 'Invalid CIF file path'
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+            if not cif_path.is_file():
+                return Response({
+                    'message': 'CIF file not found'
+                }, status=status.HTTP_404_NOT_FOUND)
+
+            return FileResponse(
+                cif_path.open("rb"),
+                as_attachment=True,
+                filename=cif_path.name,
+                content_type="chemical/x-cif"
+            )
+
         protein_id = request.GET.get('protein_id', '').strip()
 
         if not protein_id:

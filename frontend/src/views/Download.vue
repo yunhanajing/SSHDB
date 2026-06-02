@@ -11,15 +11,6 @@
               <strong>300+</strong>
             </div>
           </article>
-
-          <article class="summary-card">
-            <el-icon><FolderOpened /></el-icon>
-            <div>
-              <span>Npy files</span>
-              <strong>300 +</strong>
-            </div>
-          </article>
-
           <article class="summary-card">
             <el-icon><FolderOpened /></el-icon>
             <div>
@@ -27,12 +18,18 @@
               <strong>840 +</strong>
             </div>
           </article>
-
+          <article class="summary-card">
+            <el-icon><FolderOpened /></el-icon>
+            <div>
+              <span>Npy files</span>
+              <strong>{{ npyFiles.length }}</strong>
+            </div>
+          </article>
           <article class="summary-card">
             <el-icon><FolderOpened /></el-icon>
             <div>
               <span>Homology results</span>
-              <strong>2M +</strong>
+              <strong>{{ homologyFiles.length }}</strong>
             </div>
           </article>
 
@@ -40,91 +37,10 @@
             <el-icon><FolderOpened /></el-icon>
             <div>
               <span>SNF-related Genes</span>
-              <strong>240 +</strong>
+              <strong>{{ snfFiles.length }}</strong>
             </div>
           </article>
         </section>
-      </section>
-
-      <section class="panel-card filter-panel">
-        <div class="panel-tag">Filters</div>
-
-        <el-form
-          ref="formRef"
-          :model="downloadForm"
-          :rules="rules"
-          label-position="top"
-          class="download-form"
-        >
-          <div class="filter-grid">
-            <el-form-item label="Species" prop="species" class="filter-item species-filter">
-              <el-select
-                v-model="downloadForm.species"
-                class="italic-select"
-                clearable
-                filterable
-                placeholder="Select species"
-                :teleported="false"
-                @change="handleSpeciesChange"
-                @clear="handleSpeciesClear"
-              >
-                <el-option
-                  v-for="species in speciesOptions"
-                  :key="species"
-                  :label="species"
-                  :value="species"
-                />
-              </el-select>
-            </el-form-item>
-
-            <el-form-item
-              label="Genome Version"
-              prop="genomeVersion"
-              class="filter-item genome-filter"
-            >
-              <el-select
-                v-model="downloadForm.genomeVersion"
-                clearable
-                filterable
-                placeholder="Select genome version"
-                :disabled="!downloadForm.species"
-                :teleported="false"
-              >
-                <el-option
-                  v-for="item in genomeVersionOptions"
-                  :key="item.conservatory_genome_name"
-                  :label="`${item.genome_version} (${item.conservatory_genome_name})`"
-                  :value="item.conservatory_genome_name"
-                />
-              </el-select>
-            </el-form-item>
-
-            <el-form-item label="File Type" prop="fileType" class="filter-item file-type-filter">
-              <el-select
-                v-model="downloadForm.fileType"
-                clearable
-                placeholder="Select file type"
-                :teleported="false"
-              >
-                <el-option
-                  v-for="type in fileTypeOptions"
-                  :key="type.value"
-                  :label="type.label"
-                  :value="type.value"
-                />
-              </el-select>
-            </el-form-item>
-          </div>
-
-          <div class="form-actions">
-            <el-button type="primary" size="small" plain @click="handleSubmit">
-              Submit
-            </el-button>
-            <el-button type="danger" size="small" plain @click="resetFilters">
-              Reset
-            </el-button>
-          </div>
-        </el-form>
       </section>
 
       <section class="panel-card data-panel">
@@ -133,93 +49,289 @@
         <el-tabs v-model="activeTab" class="download-tabs">
           <el-tab-pane label="Genome Resources" name="genome">
             <div class="table-toolbar">
-              <el-button
-                type="primary"
-                plain
-                :disabled="!filteredGenomeFiles.length"
-                @click="downloadFiles(filteredGenomeFiles)"
-              >
-                Download filtered
-              </el-button>
+              <div class="genome-toolbar-left">
+                <div class="result-count">
+                  Total: <span>{{ filteredGenomeFiles.length }}</span>
+                </div>
+
+                <el-select
+                  v-model="genomePageSize"
+                  class="page-size-select"
+                  popper-class="page-size-dropdown"
+                >
+                  <el-option :value="10" label="10 / page" />
+                  <el-option :value="20" label="20 / page" />
+                  <el-option :value="50" label="50 / page" />
+                  <el-option :value="100" label="100 / page" />
+                </el-select>
+              </div>
+
+              <div class="genome-toolbar-right">
+                <el-input
+                  v-model="genomeFilters.species"
+                  clearable
+                  placeholder="Search species"
+                  class="genome-search-input"
+                >
+                  <template #prefix>
+                    <el-icon><Search /></el-icon>
+                  </template>
+                </el-input>
+
+                <el-input
+                  v-model="genomeFilters.genomeVersion"
+                  clearable
+                  placeholder="Search genome version"
+                  class="genome-search-input"
+                >
+                  <template #prefix>
+                    <el-icon><Search /></el-icon>
+                  </template>
+                </el-input>
+
+                <el-button
+                  type="primary"
+                  plain
+                  class="download-filtered-button"
+                  :disabled="!filteredGenomeFiles.length"
+                  @click="downloadFiles(filteredGenomeFiles)"
+                >
+                  Download filtered
+                </el-button>
+              </div>
             </div>
 
             <resource-table
-              :files="filteredGenomeFiles"
+              v-loading="genomeLoading"
+              :files="pagedGenomeFiles"
               empty-text="No genome files are configured yet"
             />
+
+            <div class="pagination-wrap">
+              <el-pagination
+                v-model:current-page="genomeCurrentPage"
+                :page-size="genomePageSize"
+                layout="prev, pager, next, jumper"
+                :total="filteredGenomeFiles.length"
+                :background="false"
+              />
+            </div>
           </el-tab-pane>
 
           <el-tab-pane label="Structure CIF Files" name="cif">
             <div class="table-toolbar">
+              <div class="genome-toolbar-left">
+                <div class="result-count">
+                  Total: <span>{{ filteredCifFiles.length }}</span>
+                </div>
 
-              <el-button
-                type="primary"
-                plain
-                :disabled="!filteredCifFiles.length"
-                @click="downloadFiles(filteredCifFiles)"
-              >
-                Download filtered
-              </el-button>
+                <el-select
+                  v-model="cifPageSize"
+                  class="page-size-select"
+                  popper-class="page-size-dropdown"
+                >
+                  <el-option :value="10" label="10 / page" />
+                  <el-option :value="20" label="20 / page" />
+                  <el-option :value="50" label="50 / page" />
+                  <el-option :value="100" label="100 / page" />
+                </el-select>
+              </div>
+
+              <div class="genome-toolbar-right">
+                <el-input
+                  v-model="cifFilters.proteinId"
+                  clearable
+                  placeholder="Search protein ID"
+                  class="genome-search-input"
+                >
+                  <template #prefix>
+                    <el-icon><Search /></el-icon>
+                  </template>
+                </el-input>
+
+                <el-button
+                  type="primary"
+                  plain
+                  class="download-filtered-button"
+                  :disabled="!filteredCifFiles.length"
+                  @click="downloadFiles(filteredCifFiles)"
+                >
+                  Download filtered
+                </el-button>
+              </div>
             </div>
 
-            <resource-table
-              :files="filteredCifFiles"
+            <cif-resource-table
+              v-loading="cifLoading"
+              :files="pagedCifFiles"
               empty-text="No CIF files found"
             />
+
+            <div class="pagination-wrap">
+              <el-pagination
+                v-model:current-page="cifCurrentPage"
+                :page-size="cifPageSize"
+                layout="prev, pager, next, jumper"
+                :total="filteredCifFiles.length"
+                :background="false"
+              />
+            </div>
           </el-tab-pane>
 
           <el-tab-pane label="Npy files" name="npy">
             <div class="table-toolbar">
-              <el-button
-                type="primary"
-                plain
-                :disabled="!filteredNpyFiles.length"
-                @click="downloadFiles(filteredNpyFiles)"
-              >
-                Download filtered
-              </el-button>
+              <div class="genome-toolbar-left">
+                <div class="result-count">
+                  Total: <span>{{ filteredNpyFiles.length }}</span>
+                </div>
+
+                <el-select
+                  v-model="npyPageSize"
+                  class="page-size-select"
+                  popper-class="page-size-dropdown"
+                >
+                  <el-option :value="10" label="10 / page" />
+                  <el-option :value="20" label="20 / page" />
+                  <el-option :value="50" label="50 / page" />
+                  <el-option :value="100" label="100 / page" />
+                </el-select>
+              </div>
+
+              <div class="genome-toolbar-right">
+                <el-input
+                  v-model="npyFilters.species"
+                  clearable
+                  placeholder="Search species"
+                  class="genome-search-input"
+                >
+                  <template #prefix>
+                    <el-icon><Search /></el-icon>
+                  </template>
+                </el-input>
+
+                <el-input
+                  v-model="npyFilters.genomeVersion"
+                  clearable
+                  placeholder="Search genome version"
+                  class="genome-search-input"
+                >
+                  <template #prefix>
+                    <el-icon><Search /></el-icon>
+                  </template>
+                </el-input>
+
+                <el-button
+                  type="primary"
+                  plain
+                  class="download-filtered-button"
+                  :disabled="!filteredNpyFiles.length"
+                  @click="downloadFiles(filteredNpyFiles)"
+                >
+                  Download filtered
+                </el-button>
+              </div>
             </div>
 
-            <resource-table
-              :files="filteredNpyFiles"
+            <npy-resource-table
+              v-loading="npyLoading"
+              :files="pagedNpyFiles"
               empty-text="No NPY files are configured yet"
             />
+
+            <div class="pagination-wrap">
+              <el-pagination
+                v-model:current-page="npyCurrentPage"
+                :page-size="npyPageSize"
+                layout="prev, pager, next, jumper"
+                :total="filteredNpyFiles.length"
+                :background="false"
+              />
+            </div>
           </el-tab-pane>
 
           <el-tab-pane label="Homology results" name="homology">
             <div class="table-toolbar">
+              <div class="genome-toolbar-left">
+                <div class="result-count">
+                  Total: <span>{{ filteredHomologyFiles.length }}</span>
+                </div>
 
-              <el-button
-                type="primary"
-                plain
-                :disabled="!filteredHomologyFiles.length"
-                @click="downloadFiles(filteredHomologyFiles)"
-              >
-                Download filtered
-              </el-button>
+                <el-select
+                  v-model="homologyPageSize"
+                  class="page-size-select"
+                  popper-class="page-size-dropdown"
+                >
+                  <el-option :value="10" label="10 / page" />
+                  <el-option :value="20" label="20 / page" />
+                  <el-option :value="50" label="50 / page" />
+                  <el-option :value="100" label="100 / page" />
+                </el-select>
+              </div>
+
+              <div class="genome-toolbar-right">
+                <el-input
+                  v-model="homologyFilters.species"
+                  clearable
+                  placeholder="Search species"
+                  class="genome-search-input"
+                >
+                  <template #prefix>
+                    <el-icon><Search /></el-icon>
+                  </template>
+                </el-input>
+
+                <el-input
+                  v-model="homologyFilters.genomeVersion"
+                  clearable
+                  placeholder="Search genome version"
+                  class="genome-search-input"
+                >
+                  <template #prefix>
+                    <el-icon><Search /></el-icon>
+                  </template>
+                </el-input>
+
+                <el-button
+                  type="primary"
+                  plain
+                  class="download-filtered-button"
+                  :disabled="!filteredHomologyFiles.length"
+                  @click="downloadFiles(filteredHomologyFiles)"
+                >
+                  Download filtered
+                </el-button>
+              </div>
             </div>
 
-            <resource-table
-              :files="filteredHomologyFiles"
+            <homology-resource-table
+              v-loading="homologyLoading"
+              :files="pagedHomologyFiles"
               empty-text="No homology result files are configured yet"
             />
+
+            <div class="pagination-wrap">
+              <el-pagination
+                v-model:current-page="homologyCurrentPage"
+                :page-size="homologyPageSize"
+                layout="prev, pager, next, jumper"
+                :total="filteredHomologyFiles.length"
+                :background="false"
+              />
+            </div>
           </el-tab-pane>
 
           <el-tab-pane label="SNF-related Genes" name="snf">
             <div class="table-toolbar">
-
-              <el-button
-                type="primary"
-                plain
-                :disabled="!filteredSnfFiles.length"
-                @click="downloadFiles(filteredSnfFiles)"
-              >
-                Download filtered
-              </el-button>
+              <div class="genome-toolbar-left">
+                <div class="result-count">
+                  Total: <span>{{ snfFiles.length }}</span>
+                </div>
+              </div>
             </div>
 
-            <resource-table
-              :files="filteredSnfFiles"
+            <snf-resource-table
+              v-loading="snfLoading"
+              :files="snfFiles"
               empty-text="No SNF-related gene files are configured yet"
             />
           </el-tab-pane>
@@ -230,9 +342,9 @@
 </template>
 
 <script setup>
-import { computed, defineComponent, h, onMounted, reactive, ref } from 'vue'
-import { ElButton, ElMessage, ElTable, ElTableColumn, ElTag } from 'element-plus'
-import { FolderOpened } from '@element-plus/icons-vue'
+import { computed, defineComponent, h, onMounted, reactive, ref, watch } from 'vue'
+import { ElButton, ElMessage, ElTable, ElTableColumn } from 'element-plus'
+import { FolderOpened, Search } from '@element-plus/icons-vue'
 import request from '@/utils/request'
 
 const ResourceTable = defineComponent({
@@ -260,11 +372,12 @@ const ResourceTable = defineComponent({
       () => [
         h(ElTableColumn, { prop: 'species', label: 'Species', minWidth: 190 }),
         h(ElTableColumn, { prop: 'genomeVersion', label: 'Genome Version', minWidth: 170 }),
+        h(ElTableColumn, { prop: 'filename', label: 'Filename', minWidth: 280 }),
         h(
           ElTableColumn,
           { prop: 'type', label: 'Type', width: 150, align: 'center' },
           {
-            default: ({ row }) => h(ElTag, { effect: 'plain', type: 'primary' }, () => row.type)
+            default: ({ row }) => h('span', { class: 'resource-type-button' }, row.type)
           }
         ),
         h(ElTableColumn, { prop: 'format', label: 'Format', width: 110, align: 'center' }),
@@ -274,18 +387,26 @@ const ResourceTable = defineComponent({
           ElTableColumn,
           { label: 'Action', width: 140, align: 'center' },
           {
-            default: ({ row }) => h(
-              ElButton,
-              {
+            default: ({ row }) => {
+              const buttonProps = {
                 tag: 'a',
                 type: 'primary',
                 plain: true,
                 size: 'small',
-                href: row.url,
-                download: row.filename
-              },
-              () => 'Download'
-            )
+                class: 'resource-download-button',
+                href: row.url
+              }
+
+              if (row.download !== false) {
+                buttonProps.download = row.download || row.filename
+              }
+
+              return h(
+                ElButton,
+                buttonProps,
+                () => 'Download'
+              )
+            }
           }
         )
       ]
@@ -293,211 +414,424 @@ const ResourceTable = defineComponent({
   }
 })
 
-const formRef = ref()
-const activeTab = ref('genome')
+const CifResourceTable = defineComponent({
+  name: 'CifResourceTable',
+  props: {
+    files: {
+      type: Array,
+      default: () => []
+    },
+    emptyText: {
+      type: String,
+      default: 'No CIF files found'
+    }
+  },
+  setup(props) {
+    return () => h(
+      ElTable,
+      {
+        data: props.files,
+        border: true,
+        stripe: true,
+        emptyText: props.emptyText,
+        style: 'width: 100%'
+      },
+      () => [
+        h(ElTableColumn, { prop: 'proteinId', label: 'Protein ID', minWidth: 220 }),
+        h(ElTableColumn, { prop: 'filename', label: 'Filename', minWidth: 280 }),
+        h(ElTableColumn, { prop: 'sizeLabel', label: 'Size', width: 120, align: 'center' }),
+        h(ElTableColumn, { prop: 'updatedAt', label: 'Updated', width: 130, align: 'center' }),
+        h(ElTableColumn, { prop: 'format', label: 'Format', width: 110, align: 'center' }),
+        h(
+          ElTableColumn,
+          { label: 'Action', width: 140, align: 'center' },
+          {
+            default: ({ row }) => {
+              const buttonProps = {
+                tag: 'a',
+                type: 'primary',
+                plain: true,
+                size: 'small',
+                class: 'resource-download-button',
+                href: row.url
+              }
 
-const DEFAULT_SPECIES = 'Arabidopsis thaliana'
-const DEFAULT_CONSERVATORY_GENOME_NAME = 'Athaliana'
-const DEFAULT_FILE_TYPE = 'Genome'
+              if (row.download !== false) {
+                buttonProps.download = row.download || row.filename
+              }
 
-const downloadForm = reactive({
-  species: DEFAULT_SPECIES,
-  genomeVersion: DEFAULT_CONSERVATORY_GENOME_NAME,
-  fileType: DEFAULT_FILE_TYPE
+              return h(
+                ElButton,
+                buttonProps,
+                () => 'Download'
+              )
+            }
+          }
+        )
+      ]
+    )
+  }
 })
 
-const speciesGenomeData = ref([])
-const speciesOptions = ref([])
-const genomeVersionOptions = ref([])
+const NpyResourceTable = defineComponent({
+  name: 'NpyResourceTable',
+  props: {
+    files: {
+      type: Array,
+      default: () => []
+    },
+    emptyText: {
+      type: String,
+      default: 'No NPY files found'
+    }
+  },
+  setup(props) {
+    return () => h(
+      ElTable,
+      {
+        data: props.files,
+        border: true,
+        stripe: true,
+        emptyText: props.emptyText,
+        style: 'width: 100%'
+      },
+      () => [
+        h(ElTableColumn, { prop: 'species', label: 'Species', minWidth: 190 }),
+        h(ElTableColumn, { prop: 'genomeVersion', label: 'Genome Version', minWidth: 170 }),
+        h(
+          ElTableColumn,
+          { prop: 'type', label: 'Type', width: 130, align: 'center' },
+          {
+            default: ({ row }) => h('span', { class: 'resource-type-button' }, row.type)
+          }
+        ),
+        h(ElTableColumn, { prop: 'filename', label: 'Filename', minWidth: 280 }),
+        h(ElTableColumn, { prop: 'sizeLabel', label: 'Size', width: 120, align: 'center' }),
+        h(ElTableColumn, { prop: 'updatedAt', label: 'Date', width: 130, align: 'center' }),
+        h(
+          ElTableColumn,
+          { label: 'Action', width: 140, align: 'center' },
+          {
+            default: ({ row }) => {
+              const buttonProps = {
+                tag: 'a',
+                type: 'primary',
+                plain: true,
+                size: 'small',
+                class: 'resource-download-button',
+                href: row.url
+              }
+
+              if (row.download !== false) {
+                buttonProps.download = row.download || row.filename
+              }
+
+              return h(
+                ElButton,
+                buttonProps,
+                () => 'Download'
+              )
+            }
+          }
+        )
+      ]
+    )
+  }
+})
+
+const HomologyResourceTable = NpyResourceTable
+
+const SnfResourceTable = defineComponent({
+  name: 'SnfResourceTable',
+  props: {
+    files: {
+      type: Array,
+      default: () => []
+    },
+    emptyText: {
+      type: String,
+      default: 'No SNF-related gene files found'
+    }
+  },
+  setup(props) {
+    return () => h(
+      ElTable,
+      {
+        data: props.files,
+        border: true,
+        stripe: true,
+        emptyText: props.emptyText,
+        style: 'width: 100%'
+      },
+      () => [
+        h(ElTableColumn, { prop: 'filename', label: 'Filename', minWidth: 360 }),
+        h(ElTableColumn, { prop: 'sizeLabel', label: 'Size', width: 120, align: 'center' }),
+        h(ElTableColumn, { prop: 'updatedAt', label: 'Date', width: 130, align: 'center' }),
+        h(
+          ElTableColumn,
+          { label: 'Action', width: 140, align: 'center' },
+          {
+            default: ({ row }) => {
+              const buttonProps = {
+                tag: 'a',
+                type: 'primary',
+                plain: true,
+                size: 'small',
+                class: 'resource-download-button',
+                href: row.url
+              }
+
+              if (row.download !== false) {
+                buttonProps.download = row.download || row.filename
+              }
+
+              return h(
+                ElButton,
+                buttonProps,
+                () => 'Download'
+              )
+            }
+          }
+        )
+      ]
+    )
+  }
+})
+
+const activeTab = ref('genome')
+
 const genomeFiles = ref([])
+const genomeLoading = ref(false)
+const genomeCurrentPage = ref(1)
+const genomePageSize = ref(10)
+const genomeFilters = reactive({
+  species: '',
+  genomeVersion: ''
+})
 
-const fileTypeOptions = [
-  { label: 'Genome', value: 'Genome' },
-  { label: 'GFF', value: 'GFF' },
-  { label: 'CIF', value: 'CIF' },
-  { label: 'Npy', value: 'Npy' },
-  { label: 'Homology', value: 'Homology' },
-  { label: 'SNF-related Genes', value: 'SNF' }
-]
+const cifFiles = ref([])
+const cifLoading = ref(false)
+const cifCurrentPage = ref(1)
+const cifPageSize = ref(10)
+const cifFilters = reactive({
+  proteinId: ''
+})
 
-// Only Species is required. Genome Version and File Type are optional filters.
-const rules = {
-  species: [
-    {
-      required: true,
-      message: 'Please select species',
-      trigger: 'change'
-    }
-  ]
-}
+const npyFiles = ref([])
+const npyLoading = ref(false)
+const npyCurrentPage = ref(1)
+const npyPageSize = ref(10)
+const npyFilters = reactive({
+  species: '',
+  genomeVersion: ''
+})
 
-const cifFileManifest = [
-  { filename: 'gmacp__glyma.18g244300_model.cif', bytes: 89679 },
-  { filename: 'gmacp__lj1g3v2840250_model.cif', bytes: 90363 },
-  { filename: 'gmacp__medtr7g080390_model.cif', bytes: 91579 },
-  { filename: 'mtnsp1__phvul_010g129400_model.cif', bytes: 349353 },
-  { filename: 'mtpen3-like__phvul.005g166500_model.cif', bytes: 1005902 }
-]
+const homologyFiles = ref([])
+const homologyLoading = ref(false)
+const homologyCurrentPage = ref(1)
+const homologyPageSize = ref(10)
+const homologyFilters = reactive({
+  species: '',
+  genomeVersion: ''
+})
 
-// Add real manifests or replace these arrays with API data later.
-const npyFileManifest = []
-const homologyFileManifest = []
-const snfFileManifest = []
+const snfFiles = ref([])
+const snfLoading = ref(false)
 
-const speciesByProteinPrefix = {
-  glyma: 'Glycine max',
-  phvul: 'Phaseolus vulgaris',
-  medtr: 'Medicago truncatula',
-  lj: 'Lotus japonicus'
-}
-
-function resolveProteinSpecies(proteinId) {
-  const normalizedProteinId = proteinId.toLowerCase()
-  const matchedPrefix = Object.keys(speciesByProteinPrefix)
-    .find(prefix => normalizedProteinId.startsWith(prefix))
-
-  return matchedPrefix ? speciesByProteinPrefix[matchedPrefix] : 'Unknown'
-}
-
-function normalizeManifestFiles(files, fallbackType, fallbackFormat, fallbackDirectory = '/downloads') {
-  return files.map(item => ({
-    species: item.species || DEFAULT_SPECIES,
-    genomeVersion: item.genomeVersion || item.genome_version || '',
-    conservatoryGenomeName: item.conservatoryGenomeName || item.conservatory_genome_name || '',
-    type: item.type || fallbackType,
-    format: item.format || fallbackFormat,
+function normalizeGenomeResourceFile(item) {
+  return {
+    species: item.species || '',
+    genomeVersion:
+      item.genomeVersion ||
+      item.genome_version ||
+      item.conservatory_genome_name ||
+      '',
+    conservatoryGenomeName:
+      item.conservatoryGenomeName ||
+      item.conservatory_genome_name ||
+      '',
+    type: item.type || '',
+    format: item.format || '',
     bytes: item.bytes || 0,
-    sizeLabel: item.sizeLabel || formatFileSize(item.bytes || 0),
+    sizeLabel: item.sizeLabel || item.size_label || '-',
     updatedAt: item.updatedAt || item.updated_at || '-',
-    filename: item.filename,
-    url: item.url || `${fallbackDirectory}/${item.filename}`
-  }))
+    filename: item.filename || '',
+    url: item.url || '',
+    download: false
+  }
 }
 
-const cifFiles = computed(() =>
-  cifFileManifest.map(item => {
-    const baseName = item.filename.replace(/_model\.cif$/i, '')
-    const [, proteinId = baseName] = baseName.split('__')
+function normalizeCifResourceFile(item) {
+  return {
+    proteinId: item.proteinId || item.protein_id || '',
+    filename: item.filename || '',
+    bytes: item.bytes || 0,
+    sizeLabel: item.sizeLabel || item.size_label || '-',
+    updatedAt: item.updatedAt || item.updated_at || '-',
+    format: item.format || 'CIF',
+    url: item.url || '',
+    download: false
+  }
+}
 
-    return {
-      species: resolveProteinSpecies(proteinId),
-      genomeVersion: '',
-      conservatoryGenomeName: '',
-      type: 'CIF',
-      format: 'CIF',
-      bytes: item.bytes,
-      sizeLabel: formatFileSize(item.bytes),
-      updatedAt: '-',
-      filename: item.filename,
-      url: `/cif/${item.filename}`
-    }
+function normalizeNpyResourceFile(item) {
+  return {
+    species: item.species || '',
+    genomeVersion:
+      item.genomeVersion ||
+      item.genome_version ||
+      item.conservatory_genome_name ||
+      '',
+    conservatoryGenomeName:
+      item.conservatoryGenomeName ||
+      item.conservatory_genome_name ||
+      '',
+    type: item.type || '',
+    bytes: item.bytes || 0,
+    sizeLabel: item.sizeLabel || item.size_label || '-',
+    updatedAt: item.updatedAt || item.updated_at || '-',
+    filename: item.filename || '',
+    url: item.url || '',
+    download: false
+  }
+}
+
+function normalizeHomologyResourceFile(item) {
+  return {
+    species: item.species || '',
+    genomeVersion:
+      item.genomeVersion ||
+      item.genome_version ||
+      item.conservatory_genome_name ||
+      '',
+    conservatoryGenomeName:
+      item.conservatoryGenomeName ||
+      item.conservatory_genome_name ||
+      '',
+    type: item.type || 'results',
+    bytes: item.bytes || 0,
+    sizeLabel: item.sizeLabel || item.size_label || '-',
+    updatedAt: item.updatedAt || item.updated_at || '-',
+    filename: item.filename || '',
+    url: item.url || '',
+    download: false
+  }
+}
+
+function normalizeSnfResourceFile(item) {
+  return {
+    bytes: item.bytes || 0,
+    sizeLabel: item.sizeLabel || item.size_label || '-',
+    updatedAt: item.updatedAt || item.updated_at || '-',
+    filename: item.filename || '',
+    url: item.url || '',
+    download: false
+  }
+}
+
+const filteredGenomeFiles = computed(() => filterGenomeFiles(genomeFiles.value))
+const pagedGenomeFiles = computed(() => {
+  const start = (genomeCurrentPage.value - 1) * genomePageSize.value
+  const end = start + genomePageSize.value
+
+  return filteredGenomeFiles.value.slice(start, end)
+})
+const filteredCifFiles = computed(() => filterCifFiles(cifFiles.value))
+const pagedCifFiles = computed(() => {
+  const start = (cifCurrentPage.value - 1) * cifPageSize.value
+  const end = start + cifPageSize.value
+
+  return filteredCifFiles.value.slice(start, end)
+})
+const filteredNpyFiles = computed(() => filterNpyFiles(npyFiles.value))
+const pagedNpyFiles = computed(() => {
+  const start = (npyCurrentPage.value - 1) * npyPageSize.value
+  const end = start + npyPageSize.value
+
+  return filteredNpyFiles.value.slice(start, end)
+})
+const filteredHomologyFiles = computed(() => filterHomologyFiles(homologyFiles.value))
+const pagedHomologyFiles = computed(() => {
+  const start = (homologyCurrentPage.value - 1) * homologyPageSize.value
+  const end = start + homologyPageSize.value
+
+  return filteredHomologyFiles.value.slice(start, end)
+})
+
+function includesKeyword(value, keyword) {
+  if (!keyword) return true
+  return String(value ?? '').toLowerCase().includes(keyword)
+}
+
+function filterGenomeFiles(files) {
+  const speciesKeyword = genomeFilters.species.trim().toLowerCase()
+  const genomeKeyword = genomeFilters.genomeVersion.trim().toLowerCase()
+
+  return files.filter(item => {
+    const matchesSpecies = includesKeyword(item.species, speciesKeyword)
+    const matchesGenome = includesKeyword(item.genomeVersion, genomeKeyword)
+
+    return matchesSpecies && matchesGenome
   })
+}
+
+function filterCifFiles(files) {
+  const proteinKeyword = cifFilters.proteinId.trim().toLowerCase()
+
+  return files.filter(item => includesKeyword(item.proteinId, proteinKeyword))
+}
+
+function filterNpyFiles(files) {
+  const speciesKeyword = npyFilters.species.trim().toLowerCase()
+  const genomeKeyword = npyFilters.genomeVersion.trim().toLowerCase()
+
+  return files.filter(item => {
+    const matchesSpecies = includesKeyword(item.species, speciesKeyword)
+    const matchesGenome = includesKeyword(item.genomeVersion, genomeKeyword)
+
+    return matchesSpecies && matchesGenome
+  })
+}
+
+function filterHomologyFiles(files) {
+  const speciesKeyword = homologyFilters.species.trim().toLowerCase()
+  const genomeKeyword = homologyFilters.genomeVersion.trim().toLowerCase()
+
+  return files.filter(item => {
+    const matchesSpecies = includesKeyword(item.species, speciesKeyword)
+    const matchesGenome = includesKeyword(item.genomeVersion, genomeKeyword)
+
+    return matchesSpecies && matchesGenome
+  })
+}
+
+watch(
+  () => [genomeFilters.species, genomeFilters.genomeVersion, genomePageSize.value],
+  () => {
+    genomeCurrentPage.value = 1
+  }
 )
 
-const npyFiles = computed(() => normalizeManifestFiles(npyFileManifest, 'Npy', 'NPY', '/npy'))
-const homologyFiles = computed(() => normalizeManifestFiles(homologyFileManifest, 'Homology', 'TSV', '/homology'))
-const snfFiles = computed(() => normalizeManifestFiles(snfFileManifest, 'SNF-related Genes', 'TSV', '/snf'))
-
-const allFiles = computed(() => [
-  ...genomeFiles.value,
-  ...cifFiles.value,
-  ...npyFiles.value,
-  ...homologyFiles.value,
-  ...snfFiles.value
-])
-
-const filteredGenomeFiles = computed(() => filterFiles(genomeFiles.value, ['Genome', 'GFF', 'CDS', 'Protein', 'FASTA']))
-const filteredCifFiles = computed(() => filterFiles(cifFiles.value, ['CIF']))
-const filteredNpyFiles = computed(() => filterFiles(npyFiles.value, ['Npy']))
-const filteredHomologyFiles = computed(() => filterFiles(homologyFiles.value, ['Homology']))
-const filteredSnfFiles = computed(() => filterFiles(snfFiles.value, ['SNF', 'SNF-related Genes']))
-
-const tabByFileType = {
-  Genome: 'genome',
-  GFF: 'genome',
-  CIF: 'cif',
-  Npy: 'npy',
-  Homology: 'homology',
-  SNF: 'snf'
-}
-
-function filterFiles(files, allowedTypes = []) {
-  return files.filter(item => {
-    const matchesSpecies = !downloadForm.species || item.species === downloadForm.species
-    const matchesType =
-      !downloadForm.fileType ||
-      allowedTypes.includes(downloadForm.fileType) ||
-      item.type === downloadForm.fileType
-    const matchesGenome =
-      !downloadForm.genomeVersion ||
-      !item.conservatoryGenomeName ||
-      item.conservatoryGenomeName === downloadForm.genomeVersion
-
-    return matchesSpecies && matchesType && matchesGenome
-  })
-}
-
-function handleSpeciesChange(species) {
-  downloadForm.genomeVersion = ''
-
-  if (!species) {
-    genomeVersionOptions.value = []
-    return
+watch(
+  () => [cifFilters.proteinId, cifPageSize.value],
+  () => {
+    cifCurrentPage.value = 1
   }
+)
 
-  const matchedSpecies = speciesGenomeData.value.find(
-    item => item.species === species
-  )
-
-  genomeVersionOptions.value = matchedSpecies?.genome_versions || []
-
-  if (species === DEFAULT_SPECIES) {
-    const defaultGenome = genomeVersionOptions.value.find(
-      item => item.conservatory_genome_name === DEFAULT_CONSERVATORY_GENOME_NAME
-    )
-
-    if (defaultGenome) {
-      downloadForm.genomeVersion = DEFAULT_CONSERVATORY_GENOME_NAME
-      return
-    }
+watch(
+  () => [npyFilters.species, npyFilters.genomeVersion, npyPageSize.value],
+  () => {
+    npyCurrentPage.value = 1
   }
+)
 
-  if (genomeVersionOptions.value.length) {
-    downloadForm.genomeVersion =
-      genomeVersionOptions.value[0].conservatory_genome_name
+watch(
+  () => [homologyFilters.species, homologyFilters.genomeVersion, homologyPageSize.value],
+  () => {
+    homologyCurrentPage.value = 1
   }
-}
-
-function handleSpeciesClear() {
-  downloadForm.species = ''
-  downloadForm.genomeVersion = ''
-  genomeVersionOptions.value = []
-}
-
-async function handleSubmit() {
-  if (!formRef.value) return
-
-  try {
-    await formRef.value.validate()
-  } catch {
-    return
-  }
-
-  if (downloadForm.fileType && tabByFileType[downloadForm.fileType]) {
-    activeTab.value = tabByFileType[downloadForm.fileType]
-  }
-}
-
-function resetFilters() {
-  if (formRef.value) {
-    formRef.value.clearValidate()
-  }
-
-  downloadForm.species = DEFAULT_SPECIES
-  downloadForm.fileType = DEFAULT_FILE_TYPE
-  handleSpeciesChange(DEFAULT_SPECIES)
-  activeTab.value = 'genome'
-}
+)
 
 function downloadFiles(files) {
   if (!files.length) {
@@ -509,7 +843,9 @@ function downloadFiles(files) {
     window.setTimeout(() => {
       const link = document.createElement('a')
       link.href = file.url
-      link.download = file.filename
+      if (file.download !== false) {
+        link.download = file.download || file.filename
+      }
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
@@ -532,39 +868,97 @@ function formatFileSize(bytes) {
   return `${size.toFixed(size >= 10 || unitIndex === 0 ? 0 : 1)} ${units[unitIndex]}`
 }
 
-async function fetchSpeciesOptions() {
+async function fetchGenomeFiles() {
+  genomeLoading.value = true
+
   try {
-    const res = await request.get('/api/species/names/')
-    speciesGenomeData.value = res.data.data || []
-
-    const apiSpecies = speciesGenomeData.value
-      .map(item => item.species)
-      .filter(Boolean)
-    const fileSpecies = allFiles.value
-      .map(item => item.species)
-      .filter(Boolean)
-
-    speciesOptions.value = Array.from(new Set([...apiSpecies, ...fileSpecies]))
-      .sort((a, b) => a.localeCompare(b))
-
-    if (speciesOptions.value.includes(DEFAULT_SPECIES)) {
-      downloadForm.species = DEFAULT_SPECIES
-    } else if (speciesOptions.value.length) {
-      downloadForm.species = speciesOptions.value[0]
-    }
-
-    handleSpeciesChange(downloadForm.species)
+    const res = await request.get('/api/genome/files/')
+    genomeFiles.value = (res.data.data || []).map(normalizeGenomeResourceFile)
   } catch (error) {
-    console.error('Failed to fetch species options:', error)
-    speciesOptions.value = Array.from(
-      new Set(allFiles.value.map(item => item.species).filter(Boolean))
-    ).sort((a, b) => a.localeCompare(b))
-    handleSpeciesChange(downloadForm.species)
+    console.error('Failed to fetch genome resources:', error)
+    genomeFiles.value = []
+    ElMessage.error(
+      error?.response?.data?.message || 'Failed to load genome resources'
+    )
+  } finally {
+    genomeLoading.value = false
+  }
+}
+
+async function fetchCifFiles() {
+  cifLoading.value = true
+
+  try {
+    const res = await request.get('/api/protein/cif/files/')
+    cifFiles.value = (res.data.data || []).map(normalizeCifResourceFile)
+  } catch (error) {
+    console.error('Failed to fetch CIF resources:', error)
+    cifFiles.value = []
+    ElMessage.error(
+      error?.response?.data?.message || 'Failed to load CIF resources'
+    )
+  } finally {
+    cifLoading.value = false
+  }
+}
+
+async function fetchNpyFiles() {
+  npyLoading.value = true
+
+  try {
+    const res = await request.get('/api/npy/files/')
+    npyFiles.value = (res.data.data || []).map(normalizeNpyResourceFile)
+  } catch (error) {
+    console.error('Failed to fetch NPY resources:', error)
+    npyFiles.value = []
+    ElMessage.error(
+      error?.response?.data?.message || 'Failed to load NPY resources'
+    )
+  } finally {
+    npyLoading.value = false
+  }
+}
+
+async function fetchHomologyFiles() {
+  homologyLoading.value = true
+
+  try {
+    const res = await request.get('/api/homology/files/')
+    homologyFiles.value = (res.data.data || []).map(normalizeHomologyResourceFile)
+  } catch (error) {
+    console.error('Failed to fetch homology resources:', error)
+    homologyFiles.value = []
+    ElMessage.error(
+      error?.response?.data?.message || 'Failed to load homology resources'
+    )
+  } finally {
+    homologyLoading.value = false
+  }
+}
+
+async function fetchSnfFiles() {
+  snfLoading.value = true
+
+  try {
+    const res = await request.get('/api/snf/files/')
+    snfFiles.value = (res.data.data || []).map(normalizeSnfResourceFile)
+  } catch (error) {
+    console.error('Failed to fetch SNF-related gene resources:', error)
+    snfFiles.value = []
+    ElMessage.error(
+      error?.response?.data?.message || 'Failed to load SNF-related gene resources'
+    )
+  } finally {
+    snfLoading.value = false
   }
 }
 
 onMounted(() => {
-  fetchSpeciesOptions()
+  fetchGenomeFiles()
+  fetchCifFiles()
+  fetchNpyFiles()
+  fetchHomologyFiles()
+  fetchSnfFiles()
 })
 </script>
 
@@ -700,52 +1094,6 @@ onMounted(() => {
   padding: 58px 28px 28px;
 }
 
-.download-form {
-  width: 100%;
-}
-
-.filter-grid {
-  display: grid;
-  grid-template-columns: minmax(230px, 290px) minmax(240px, 280px) minmax(170px, 210px);
-  column-gap: 28px;
-  row-gap: 17px;
-  align-items: end;
-  justify-content: center;
-  margin-top: 18px;
-}
-
-.filter-item {
-  margin-bottom: 0;
-}
-
-.filter-item :deep(.el-form-item__label) {
-  color: #2f456b;
-  font-size: 16px;
-  font-weight: 700;
-  line-height: 1.2;
-  margin-bottom: 10px;
-  text-align: left;
-}
-
-.filter-item :deep(.el-select) {
-  width: 100%;
-}
-
-.form-actions {
-  display: flex;
-  justify-content: center;
-  gap: 16px;
-  margin-top: 22px;
-}
-
-.form-actions :deep(.el-button) {
-  min-width: 72px;
-  height: 32px;
-  padding: 6px 16px;
-  margin-left: 0;
-  font-size: 13px;
-}
-
 .data-panel {
   padding: 58px 28px 28px;
 }
@@ -768,10 +1116,107 @@ onMounted(() => {
 .table-toolbar {
   margin: 14px 0 16px;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
-  gap: 18px;
+  gap: 24px;
   margin-top: 25px;
+  flex-wrap: nowrap;
+}
+
+.genome-toolbar-left,
+.genome-toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: nowrap;
+  min-width: 0;
+}
+
+.genome-toolbar-right {
+  flex: 1 1 auto;
+  justify-content: flex-end;
+}
+
+.result-count {
+  font-size: 16px;
+  color: #303133;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.result-count span {
+  color: #409eff;
+}
+
+.page-size-select {
+  width: 120px;
+}
+
+.genome-search-input {
+  width: 260px;
+}
+
+.download-filtered-button {
+  width: 166px;
+  height: 36px;
+  flex: 0 0 166px;
+}
+
+.resource-type-button {
+  width: 68px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  border: 1px solid #8bbcff;
+  border-radius: 4px;
+  background: #f4f9ff;
+  color: #0d4f9e;
+  font-size: 12px;
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.resource-download-button {
+  width: 76px;
+  height: 24px;
+  padding: 0;
+  font-size: 12px;
+}
+
+.resource-download-button :deep(span) {
+  line-height: 1;
+}
+
+.download-filtered-button,
+.resource-download-button {
+  background: #f4f9ff;
+}
+
+.download-filtered-button:hover,
+.download-filtered-button:focus,
+.resource-download-button:hover,
+.resource-download-button:focus {
+  color: #409eff;
+  border-color: #409eff;
+  background: #ecf5ff;
+}
+
+.download-filtered-button:active,
+.resource-download-button:active {
+  color: #337ecc;
+  border-color: #337ecc;
+  background: #d9ecff;
+}
+
+.pagination-wrap {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-start;
+  overflow-x: auto;
 }
 
 .table-toolbar h2 {
@@ -815,13 +1260,56 @@ onMounted(() => {
   font-weight: 700;
 }
 
+:deep(.el-pagination .btn-prev),
+:deep(.el-pagination .btn-next),
+:deep(.el-pagination .el-pager li) {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+:deep(.el-pagination .el-pager li.is-active) {
+  background: transparent !important;
+  color: #409eff !important;
+}
+
+:deep(.el-pagination .el-input__inner) {
+  background-color: transparent !important;
+  text-align: center;
+}
+
+:deep(.el-pagination__jump .el-input) {
+  width: 30px;
+}
+
+:deep(.el-pagination__jump .el-input__wrapper) {
+  min-height: 30px !important;
+  height: 30px !important;
+  padding: 0 2px !important;
+}
+
+:deep(.page-size-dropdown .el-select-dropdown__item.is-selected) {
+  background-color: transparent !important;
+  color: #409eff !important;
+  font-weight: 500;
+}
+
+:deep(.page-size-dropdown .el-select-dropdown__item.hover),
+:deep(.page-size-dropdown .el-select-dropdown__item:hover) {
+  background-color: #f5f7fa !important;
+}
+
 @media (max-width: 1100px) {
   .summary-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .filter-grid {
-    grid-template-columns: repeat(2, minmax(230px, 290px));
+  .table-toolbar {
+    flex-wrap: wrap;
+  }
+
+  .genome-toolbar-right {
+    justify-content: flex-start;
   }
 }
 
@@ -841,13 +1329,21 @@ onMounted(() => {
     grid-template-columns: 1fr;
   }
 
-  .filter-grid {
-    grid-template-columns: minmax(0, 290px);
-  }
-
   .table-toolbar {
     align-items: stretch;
     flex-direction: column;
+  }
+
+  .genome-toolbar-left,
+  .genome-toolbar-right {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
+
+  .genome-search-input,
+  .page-size-select {
+    width: 100%;
   }
 }
 </style>

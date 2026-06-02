@@ -1,5 +1,21 @@
 from django.urls import path
-from .views import GeneUniqueListAPIView,SpeciesGenomeVersionListAPIView,SearchResultAPIView,ProteinInfoAPIView,ProteinSequenceAPIView,ProteinCifFileAPIView
+from .views import (
+    GeneUniqueListAPIView,
+    GenomeResourceFileAPIView,
+    GenomeResourceListAPIView,
+    HomologyResourceFileAPIView,
+    HomologyResourceListAPIView,
+    NpyResourceFileAPIView,
+    NpyResourceListAPIView,
+    ProteinCifFileAPIView,
+    ProteinCifFileListAPIView,
+    ProteinInfoAPIView,
+    ProteinSequenceAPIView,
+    SearchResultAPIView,
+    SpeciesGenomeVersionListAPIView,
+    SnfResourceFileAPIView,
+    SnfResourceListAPIView,
+)
 
 urlpatterns = [
     path("genes/unique/", GeneUniqueListAPIView.as_view(), name="gene-unique-list"),
@@ -8,4 +24,13 @@ urlpatterns = [
     path("protein/info/", ProteinInfoAPIView.as_view(), name="protein-info-list"),
     path("protein/sequence/", ProteinSequenceAPIView.as_view(), name="protein-sequence"),
     path("protein/cif/", ProteinCifFileAPIView.as_view(), name="protein-cif-file"),
+    path("protein/cif/files/", ProteinCifFileListAPIView.as_view(), name="protein-cif-file-list"),
+    path("genome/file/", GenomeResourceFileAPIView.as_view(), name="genome-resource-file"),
+    path("genome/files/", GenomeResourceListAPIView.as_view(), name="genome-resource-list"),
+    path("npy/file/", NpyResourceFileAPIView.as_view(), name="npy-resource-file"),
+    path("npy/files/", NpyResourceListAPIView.as_view(), name="npy-resource-list"),
+    path("homology/file/", HomologyResourceFileAPIView.as_view(), name="homology-resource-file"),
+    path("homology/files/", HomologyResourceListAPIView.as_view(), name="homology-resource-list"),
+    path("snf/file/", SnfResourceFileAPIView.as_view(), name="snf-resource-file"),
+    path("snf/files/", SnfResourceListAPIView.as_view(), name="snf-resource-list"),
 ]

@@ -43,6 +43,15 @@
         <el-button type="danger" plain @click="handleReset">
           Reset
         </el-button>
+
+        <el-button
+          type="success"
+          plain
+          :loading="geneListDownloading"
+          @click="handleDownloadGeneList"
+        >
+          <span>Gene list</span>
+        </el-button>
       </div>
     </el-form>
   </div>
@@ -51,10 +60,12 @@
 <script setup>
 import { reactive, ref } from 'vue'
 import { ElMessage } from 'element-plus'
+import request from '@/utils/request'
 
 const emit = defineEmits(['search', 'reset'])
 
 const formRef = ref()
+const geneListDownloading = ref(false)
 
 const form = reactive({
   geneIds: ''
@@ -112,6 +123,51 @@ const handleReset = () => {
   form.geneIds = ''
   formRef.value?.clearValidate()
   emit('reset')
+}
+
+const formatGeneList = data => {
+  return (Array.isArray(data) ? data : [])
+    .map(item => String(item ?? '').trim())
+    .filter(Boolean)
+}
+
+const handleDownloadGeneList = async () => {
+  if (geneListDownloading.value) return
+
+  geneListDownloading.value = true
+
+  try {
+    const res = await request.get('/api/genes/unique/')
+    const geneList = formatGeneList(res.data.data || [])
+
+    if (!geneList.length) {
+      ElMessage.warning('No gene list to download')
+      return
+    }
+
+    const textContent = `${geneList.join('\n')}\n`
+
+    const blob = new Blob([textContent], {
+      type: 'text/plain;charset=utf-8;'
+    })
+
+    const url = window.URL.createObjectURL(blob)
+    const link = document.createElement('a')
+
+    link.href = url
+    link.setAttribute('download', 'gene_list.txt')
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+
+    window.URL.revokeObjectURL(url)
+    ElMessage.success('Gene list downloaded')
+  } catch (error) {
+    console.error('Failed to download gene list:', error)
+    ElMessage.error(error?.response?.data?.message || 'Failed to download gene list')
+  } finally {
+    geneListDownloading.value = false
+  }
 }
 </script>
 

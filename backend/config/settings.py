@@ -162,3 +162,15 @@ PROTEIN_CIF_ROOT = BASE_DIR.parent / "cif"
 PROTEIN_CONFIDENCE_ROOT = BASE_DIR.parent / "confidences.json"
 
 PROTEIN_EXAMPLE_JSON_PATH = r"D:\for_wangge_protein\first_protein_examples.json"
+
+# Genome FASTA/GFF download resources. Change this one path when deploying.
+GENOME_FILE_ROOT = Path(r"D:\ssh\assembly\data")
+
+# NPY embedding and metadata download resources.
+PROTEIN_NPY_ROOT = BASE_DIR.parent / "npy"
+
+# Homology result download resources.
+PROTEIN_HOMOLOGY_ROOT = BASE_DIR.parent / "tmvec"
+
+# SNF-related gene download resource.
+SNF_RELATED_GENE_FILE = Path(r"D:\results_wangge\output_protein_data_with_domain.csv")
