@@ -22,14 +22,14 @@
             <el-icon><FolderOpened /></el-icon>
             <div>
               <span>Npy files</span>
-              <strong>{{ npyFiles.length }}</strong>
+              <strong>300 +</strong>
             </div>
           </article>
           <article class="summary-card">
             <el-icon><FolderOpened /></el-icon>
             <div>
               <span>Homology results</span>
-              <strong>{{ homologyFiles.length }}</strong>
+              <strong>2M +</strong>
             </div>
           </article>
 
@@ -37,7 +37,7 @@
             <el-icon><FolderOpened /></el-icon>
             <div>
               <span>SNF-related Genes</span>
-              <strong>{{ snfFiles.length }}</strong>
+              <strong>200 +</strong>
             </div>
           </article>
         </section>

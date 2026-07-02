@@ -583,8 +583,8 @@ export default {
 
       allowedExtensions: ['pdb', 'cif', 'mmcif'],
 
-      exampleFile1Url: '/pdb/1crn.pdb',
-      exampleFile2Url: '/pdb/1ubq.pdb',
+      exampleFile1Url: '/cif/gmacp__glyma.18g244300_model.cif',
+      exampleFile2Url: '/cif/gmacp__lj1g3v2840250_model.cif',
 
       result: null,
 

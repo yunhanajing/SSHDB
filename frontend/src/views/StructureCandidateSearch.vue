@@ -145,9 +145,9 @@
               <el-form-item prop="similarityRange" class="search-item range-item">
                 <template #label>
                   <span class="required-star">*</span>
-                  <span>Cosine Similarity Range</span>
+                  <span>TM-score</span>
                   <el-tooltip
-                    content="Only positive cosine similarity results are kept. Select a range from 0% to 100%."
+                    content="Only positive TM-score results are kept. Select a range from 0 to 1."
                     placement="top"
                     effect="light"
                   >

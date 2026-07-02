@@ -84,7 +84,7 @@
         </p>
         <p>
           If you have any questions or suggestions about this website, please contact us at&nbsp;&nbsp;
-          <a href="mailto:xxxxx@example.com">xxxxx@example.com</a>.
+          <a href="mailto:wanghaifeng@yzwlab.cn">wanghaifeng@yzwlab.cn</a>.
         </p>
       </div>
     </footer>

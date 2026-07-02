@@ -93,6 +93,7 @@
 
             <figure class="framework-figure">
               <img src="/1.png" alt="SSHDB framework overview" />
+              <figcaption>Fig. 1. The overview of SSHDB.</figcaption>
             </figure>
           </section>
 
@@ -173,6 +174,7 @@
               </article>
             <figure class="framework-figure2">
               <img src="/2.png" alt="SSHDB framework overview" />
+              <figcaption>Fig. 2. Overview of the SSHDB search module.</figcaption>
             </figure>
             </div>
           </section>
@@ -236,6 +238,7 @@
             </div>
             <figure class="framework-figure2">
               <img src="/3.png" alt="SSHDB framework overview" />
+              <figcaption>Fig. 3. Overview of the SSHDB tools module.</figcaption>
             </figure>
           </section>
 
@@ -304,16 +307,8 @@
                     <span>Yazhouwan National Laboratory, Sanya, Hainan 572025, China.</span>
                   </div>
                   <div>
-                    <strong>Telephone:</strong>
-                    <span>To be updated</span>
-                  </div>
-                  <div>
-                    <strong>Fax:</strong>
-                    <span>To be updated</span>
-                  </div>
-                  <div>
                     <strong>E-mail:</strong>
-                    <span>To be updated</span>
+                    <span>wanghaifeng@yzwlab.cn</span>
                   </div>
                 </div>
               </article>
@@ -636,6 +631,7 @@ export default {
   box-sizing: border-box;
 
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 }
@@ -658,12 +654,14 @@ export default {
   object-position: center center;
   transform: translateY(6px);
 }
-
-.framework-figure figcaption {
+.framework-figure figcaption,
+.framework-figure2 figcaption {
   margin-top: 12px;
-  color: #60758f;
-  font-size: 13px;
+  color: #203250;
+  font-size: 15px;
   line-height: 1.5;
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: center;
 }
 
 .tool-grid {
