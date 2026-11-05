@@ -9,14 +9,14 @@ SSHDB 提供共生固氮相关基因及候选蛋白的检索、序列与结构�
 | 浏览器路径 | Vue 组件 | 用途 |
 | --- | --- | --- |
 | `/` | `Home.vue、components/VisitorMap.vue` | 首页，提供快捷检索、代表物种、示例入口和访客分布地图。 |
-| `/search` | `Index.vue` | 按基因、物种、基因组版本及类别筛选数据库中已有的候选记录。 |
-| `/gene-info` | `GeneInfoPage.vue` | 按基因或物种查询关联蛋白，以表格展示，也承接首页快捷检索。 |
-| `/protein/detail` | `components/ProteinDetail.vue` | 展示选中蛋白的标识、物种、结构域、氨基酸序列和可用结构。 |
-| `/structure-candidate-search` | `StructureCandidateSearch.vue` | 给定查询蛋白和目标物种，按预计算蛋白向量的余弦相似度筛选候选。这个分数与下方结构叠合产生的 TM-score 含义不同。 |
+| `/search` | `Index.vue` | 按基因、物种、基因组版本及ABC类别筛选。 |
+| `/gene-info` | `GeneInfoPage.vue、components/GeneSearch.vue、components/GeneTable.vue` | 按基因或物种查询关联蛋白，以表格展示，也承接首页快捷检索。 |
+| `/protein/detail` | `components/ProteinDetail.vue、components/ProteinSequencePanel.vue` | 展示选中蛋白的标识、物种、结构域、氨基酸序列和3D结构。 |
+| `/structure-candidate-search` | `StructureCandidateSearch.vue` | 给定查询蛋白和目标物种，按预计算蛋白向量的余弦相似度筛选候选。 |
 | `/sequence-alignment` | `SequenceAlignment.vue` | 输入两条蛋白序列，查看 BLASTP 局部比对和 MAFFT 全长比对。 |
 | `/structure-alignment` | `StructureAlignment.vue` | 上传两份结构，查看 US-align 叠合、TM-score、RMSD 和对齐片段。 |
-| `/jbrowse` | `JBrowse.vue` | 选择物种和组装版本，打开内嵌基因组浏览器。基因组清单、序列和轨道依赖独立静态资源服务。 |
-| `/download` | `Download.vue` | 列出并下载基因组、蛋白结构、向量、同源候选结果和固氮相关基因数据。旧地址 `/test` 会跳转到这里。 |
+| `/jbrowse` | `JBrowse.vue` | 选择物种和组装版本，打开基因组浏览器。 |
+| `/download` | `Download.vue` | 列出并下载基因组、蛋白结构、向量、同源候选结果和固氮相关基因数据。 |
 | `/about` | `About.vue` | 介绍数据库框架、检索与工具用法、联系方式和参考文献。 |
 |  | `App.vue` | 顶部、导航栏、底部。 |
 
