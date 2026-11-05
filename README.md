@@ -32,8 +32,8 @@ SSHDB 提供共生固氮相关基因及候选蛋白的检索、序列与结构�
 | GET | `/api/protein/sequence/` | 按 `protein_id` 返回氨基酸序列及可用 CIF 文件信息。 |
 | GET | `/api/protein/cif/files/`、`/api/protein/cif/` | 前者列结构文件，后者按文件名或蛋白 ID 取 CIF 文件。 |
 | GET | `/api/{genome,npy,homology,snf}/files/`、`/api/{genome,npy,homology,snf}/file/` | 花括号代表四组实际路径。分别对应基因组及注释、蛋白向量及元数据、同源候选结果、固氮相关基因。复数路径列文件，单数路径取文件。 |
-| GET | `/search/protein-example/--对应Custom Protein Homolog Search` | 按 `query_species` 获取一个可用于向量检索的示例蛋白。 |
-| GET | `/search/protein-embedding/--对应Custom Protein Homolog Search/` | 根据 `protein_id` 和 `target_species` 检索目标物种的向量，可指定查询物种和相似度区间。 |
+| GET | `/search/protein-example/--对应StructureCandidateSearch.vue` | 按 `query_species` 获取一个可用于向量检索的示例蛋白。 |
+| GET | `/search/protein-embedding/--对应StructureCandidateSearch.vue` | 根据 `protein_id` 和 `target_species` 检索目标物种的向量，可指定查询物种和相似度区间。 |
 | POST | `/tools/sequence/align/` | JSON 提交 `sequence1` 和 `sequence2`，返回 BLASTP 与 MAFFT 的比对结果。 |
 | POST | `/tools/structure/align/` | 表单上传 `file1` 和 `file2`，返回 US-align 指标和叠合文件地址。 |
 | POST | `/tools/visitors/track/` | 成功切换页面后记录访问事件，用于汇总访问次数和估算独立访客数。 |
