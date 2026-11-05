@@ -86,6 +86,7 @@
           If you have any questions or suggestions about this website, please contact us at&nbsp;&nbsp;
           <a href="mailto:wanghaifeng@yzwlab.cn">wanghaifeng@yzwlab.cn</a>.
         </p>
+        <!-- <p>鲁ICP备2026038822号</p> -->
       </div>
     </footer>
   </div>

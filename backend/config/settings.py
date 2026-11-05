@@ -10,6 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
+import json
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -20,7 +22,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-a24mnab1as2iz)l4+3yd_ho2+8*vxb+#%mre@=x*0mr=+w9i50"
+# 部署时可用环境变量覆盖本机配置。配置文件仅保留在本机，避免凭据进入仓库。
+local_settings_path = BASE_DIR / "config" / "settings.local.json"
+local_settings = json.loads(local_settings_path.read_text(encoding="utf-8")) if local_settings_path.exists() else {}
+
+def required_setting(name):
+    if name in os.environ:
+        return os.environ[name]
+    if name in local_settings:
+        return local_settings[name]
+    raise RuntimeError(f"Set {name} in the environment or in {local_settings_path}")
+
+SECRET_KEY = required_setting("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -81,7 +94,7 @@ DATABASES = {
             "HOST": "127.0.0.1",
             "PORT": 3307,
             "USER": "CSSPdb_root",
-            "PASSWORD": "CSSPdb_huhuattention",
+            "PASSWORD": required_setting("SSHDB_DB_PASSWORD"),
             "NAME": "yzw_CSSPdb_20260421",
             "OPTIONS": {
                 "charset": "utf8mb4",
@@ -149,6 +162,18 @@ MAFFT_EXE = r"D:\mafft-7.526-win64-signed\mafft-win\mafft.bat"
 USALIGN_EXE = r"D:\USalign\USalign.exe"
 
 STRUCTURE_UPLOAD_MAX_SIZE = 50 * 1024 * 1024
+
+# Visitor statistics use Shanghai calendar boundaries while timestamps remain UTC.
+VISITOR_STATS_TIME_ZONE = "Asia/Shanghai"
+
+# Optional MaxMind GeoLite2 Country database. Tracking still works when absent,
+# but country fields remain empty until this file and the geoip2 package exist.
+GEOIP_COUNTRY_DB = Path(
+    os.environ.get(
+        "GEOIP_COUNTRY_DB",
+        BASE_DIR / "geoip" / "GeoLite2-Country.mmdb",
+    )
+)
 
 USALIGN_TIMEOUT = 120
 

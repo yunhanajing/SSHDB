@@ -203,6 +203,8 @@
           <p class="example-copyright">&copy; 2025 SSHDB. All rights reserved.</p>
         </div>
       </section>
+
+      <VisitorMap />
     </main>
   </div>
 </template>
@@ -211,6 +213,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
+import VisitorMap from './components/VisitorMap.vue'
 
 const router = useRouter()
 

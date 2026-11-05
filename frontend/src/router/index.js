@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { trackPageView } from '@/utils/visitorTracking'
 
 const HomeView = () => import('../views/Home.vue')
 const IndexView = () => import('../views/Index.vue')
@@ -75,6 +76,12 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes
+})
+
+router.afterEach((to, from, failure) => {
+  if (!failure) {
+    trackPageView(to.path)
+  }
 })
 
 export default router
