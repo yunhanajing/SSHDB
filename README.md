@@ -8,7 +8,7 @@ SSHDB 提供共生固氮相关基因及候选蛋白的检索、序列与结构�
 
 | 浏览器路径 | Vue 组件 | 用途 |
 | --- | --- | --- |
-| `/` | `Home.vue` | 首页，提供快捷检索、代表物种、示例入口和访客分布地图。 |
+| `/` | `Home.vue、components/VisitorMap.vue` | 首页，提供快捷检索、代表物种、示例入口和访客分布地图。 |
 | `/search` | `Index.vue` | 按基因、物种、基因组版本及类别筛选数据库中已有的候选记录。 |
 | `/gene-info` | `GeneInfoPage.vue` | 按基因或物种查询关联蛋白，以表格展示，也承接首页快捷检索。 |
 | `/protein/detail` | `components/ProteinDetail.vue` | 展示选中蛋白的标识、物种、结构域、氨基酸序列和可用结构。 |
