@@ -89,6 +89,4 @@ SSHDB 提供共生固氮相关基因及候选蛋白的检索、序列与结构�
 
 ## 运行所需的本地资源
 
-- 启动 Django 前，设置环境变量 `DJANGO_SECRET_KEY` 和 `SSHDB_DB_PASSWORD`，或在本机的 `backend/config/settings.local.json` 中用这两个键填写配置。该文件已列入 Git 忽略规则。
-- 数据查询依赖已有 MySQL 业务表。访客统计还依赖 `visitor_event` 表，其 Django 模型设置了 `managed = False`，普通迁移不会创建它。按国家展示访问量需要 GeoIP 数据及读取库，见 [GeoIP 配置说明](backend/geoip/README.md)。
-- 启用比对和下载前，请核对 [backend/config/settings.py](backend/config/settings.py) 中 BLASTP、MAFFT、US-align 和各类数据文件的实际路径。JBrowse 静态服务需支持 HTTP Range，以读取已建索引的基因组文件。
+- 这里的 (backend/config/settings.py) 中 很多软件如BLASTP、MAFFT、US-align 以及数据库连接等都是我本地的，实际以/data/sshdb/backend/config/settings.py华为云上的配置文件为主。
